@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON 在线解析工具</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>JSON 在线解析工具</h1>
+      <h2>格式化、压缩、验证 JSON 数据</h2>
+    </header>
+
+    <main class="main-content">
+      <div class="input-panel">
+        <textarea id="input" placeholder="在此输入 JSON 字符串...&#10;&#10;示例：&#10;{&#10;  &quot;name&quot;: &quot;张三&quot;,&#10;  &quot;age&quot;: 30&#10;}"></textarea>
+      </div>
+
+      <div class="output-panel">
+        <div class="output-container">
+          <div class="line-numbers"></div>
+          <pre><code id="output" class="language-json"></code></pre>
+        </div>
+      </div>
+    </main>
+
+    <div class="toolbar">
+      <button id="formatBtn" class="primary" aria-label="格式化 JSON">格式化</button>
+      <button id="compressBtn" class="secondary" aria-label="压缩 JSON">压缩</button>
+      <button id="validateBtn" class="secondary" aria-label="验证 JSON 语法">验证</button>
+      <button id="copyBtn" class="secondary" aria-label="复制到剪贴板">复制</button>
+      <button id="clearBtn" class="danger" aria-label="清空所有内容">清空</button>
+      <button id="sampleBtn" class="secondary" aria-label="加载示例数据">示例</button>
+    </div>
+
+    <footer class="status-bar">
+      <div class="status-message" id="statusMessage" role="status" aria-live="polite">就绪</div>
+      <div class="stats" id="stats" aria-label="统计信息"></div>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
