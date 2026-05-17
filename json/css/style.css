@@ -250,10 +250,18 @@ code .hljs-title {
 /* Toolbar */
 .toolbar {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: 10px;
   padding: 12px 0;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
+}
+
+.toolbar-left,
+.toolbar-right {
+  display: flex;
+  gap: 10px;
 }
 
 button {
@@ -358,6 +366,11 @@ button:active:not(:disabled) {
   .toolbar {
     flex-wrap: nowrap;
   }
+
+  .toolbar-left,
+  .toolbar-right {
+    flex-wrap: nowrap;
+  }
 }
 
 /* Mobile (≤ 768px) */
@@ -413,12 +426,20 @@ button:active:not(:disabled) {
   }
 
   .toolbar {
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
     padding: 10px 0;
+  }
+
+  .toolbar-left,
+  .toolbar-right {
+    flex-wrap: wrap;
     gap: 8px;
   }
 
-  button {
+  .toolbar-left button,
+  .toolbar-right button {
     flex: 1 1 calc(50% - 4px);
     min-width: 0;
     padding: 12px 8px;
