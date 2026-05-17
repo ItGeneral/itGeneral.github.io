@@ -53,6 +53,18 @@ header {
   margin-bottom: 20px;
 }
 
+.header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+
+.header-text {
+  flex: 1;
+}
+
 h1 {
   font-size: 24px;
   font-weight: 700;
@@ -64,6 +76,34 @@ h2 {
   font-weight: 500;
   margin-top: 4px;
   color: var(--text-secondary);
+}
+
+/* Language select dropdown */
+.lang-select {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 6px 12px;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  outline: none;
+}
+
+.lang-select:hover {
+  border-color: var(--primary-color);
+}
+
+.lang-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
 }
 
 /* Main content - dual panel layout */
@@ -96,6 +136,14 @@ h2 {
   resize: none;
   background-color: var(--input-bg);
   outline: none;
+  /* Prevent zoom on iOS */
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  #input {
+    font-size: 16px; /* Important for iOS */
+  }
 }
 
 #input::placeholder {
@@ -153,34 +201,50 @@ code {
   color: #24292e;
 }
 
-/* JSON Key (property names) */
-code .hljs-attr {
-  color: #005cc5;
+/* JSON Key (property names with quotes) */
+code .hljs-key {
+  color: #8b2bb9;
+  font-weight: 600;
 }
 
-/* JSON String values */
+/* JSON String values (green) */
 code .hljs-string {
-  color: #032f62;
+  color: #22863a;
+  font-weight: normal;
 }
 
 /* JSON Numbers */
 code .hljs-number {
-  color: #e36209;
+  color: #0052cc;
+  font-weight: 600;
 }
 
-/* JSON Boolean and null */
-code .hljs-literal {
-  color: #6f42c1;
+/* JSON Boolean */
+code .hljs-boolean {
+  color: #d73a49;
+  font-weight: 600;
+}
+
+/* JSON null */
+code .hljs-null {
+  color: #e36209;
+  font-weight: 600;
 }
 
 /* JSON Punctuation */
 code .hljs-punctuation {
   color: #586069;
+  font-weight: 500;
 }
 
-/* JSON Keys (with quotes) */
+/* JSON Keys (with quotes) - for compatibility */
+code .hljs-attr {
+  color: #0052cc;
+  font-weight: 600;
+}
+
 code .hljs-title {
-  color: #005cc5;
+  color: #0052cc;
 }
 
 /* Toolbar */
@@ -298,21 +362,25 @@ button:active:not(:disabled) {
 
 /* Mobile (≤ 768px) */
 @media (max-width: 768px) {
-  .main-content {
+  .container {
+    height: auto;
+    min-height: 100vh;
+    padding: 10px;
+  }
+
+  .header-content {
     flex-direction: column;
+    gap: 10px;
   }
 
-  .toolbar {
-    flex-wrap: wrap;
+  .lang-select {
+    position: static;
+    transform: none;
+    align-self: flex-end;
   }
 
-  button {
-    flex: 1 1 calc(50% - 5px);
-    min-width: 120px;
-  }
-
-  .line-numbers {
-    display: none;
+  header {
+    margin-bottom: 10px;
   }
 
   h1 {
@@ -321,6 +389,57 @@ button:active:not(:disabled) {
 
   h2 {
     font-size: 14px;
+    margin-top: 2px;
+  }
+
+  .main-content {
+    flex-direction: column;
+    margin: 10px 0;
+    gap: 10px;
+  }
+
+  .input-panel,
+  .output-panel {
+    min-height: 200px;
+  }
+
+  #input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  pre {
+    font-size: 13px;
+    line-height: 20px;
+  }
+
+  .toolbar {
+    flex-wrap: wrap;
+    padding: 10px 0;
+    gap: 8px;
+  }
+
+  button {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+    padding: 12px 8px;
+    font-size: 14px;
+    font-size: 16px; /* Larger touch target */
+  }
+
+  .line-numbers {
+    display: none;
+  }
+
+  .status-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    padding: 10px 0;
+    font-size: 12px;
+  }
+
+  .stats {
+    font-size: 11px;
   }
 }
 
