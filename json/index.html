@@ -35,12 +35,16 @@
     </main>
 
     <div class="toolbar">
-      <button id="formatBtn" class="primary" data-i18n="format" aria-label="Format JSON">Format</button>
-      <button id="compressBtn" class="secondary" data-i18n="compress" aria-label="Compress JSON">Compress</button>
-      <button id="validateBtn" class="secondary" data-i18n="validate" aria-label="Validate JSON syntax">Validate</button>
-      <button id="copyBtn" class="secondary" data-i18n="copy" aria-label="Copy to clipboard">Copy</button>
-      <button id="clearBtn" class="danger" data-i18n="clear" aria-label="Clear all content">Clear</button>
-      <button id="sampleBtn" class="secondary" data-i18n="sample" aria-label="Load sample data">Sample</button>
+      <div class="toolbar-left">
+        <button id="formatBtn" class="primary" data-i18n="format" aria-label="Format JSON">Format</button>
+        <button id="validateBtn" class="secondary" data-i18n="validate" aria-label="Validate JSON syntax">Validate</button>
+        <button id="clearBtn" class="danger" data-i18n="clear" aria-label="Clear all content">Clear</button>
+        <button id="sampleBtn" class="secondary" data-i18n="sample" aria-label="Load sample data">Sample</button>
+      </div>
+      <div class="toolbar-right">
+        <button id="compressBtn" class="secondary" data-i18n="compress" aria-label="Compress JSON">Compress</button>
+        <button id="copyBtn" class="secondary" data-i18n="copy" aria-label="Copy to clipboard">Copy</button>
+      </div>
     </div>
 
     <footer class="status-bar">
