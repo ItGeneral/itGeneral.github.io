@@ -160,6 +160,9 @@ const clearBtn = document.getElementById('clearBtn');
 const sampleBtn = document.getElementById('sampleBtn');
 const langSelect = document.getElementById('langSelect');
 
+// Debounce timer for real-time formatting
+let debounceTimer = null;
+
 // Status message helper
 function showStatus(message, type = '') {
   statusMessage.textContent = message;
@@ -440,6 +443,38 @@ function clearAll() {
   input.focus();
 }
 
+// Real-time format input and display in output
+function realTimeFormat() {
+  const inputValue = input.value.trim();
+
+  // Clear previous timer
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+  }
+
+  // Debounce: wait 300ms after user stops typing
+  debounceTimer = setTimeout(() => {
+    if (!inputValue) {
+      output.textContent = '';
+      lineNumbers.innerHTML = '';
+      updateStatistics('');
+      showStatus(t('ready'));
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(input.value);
+      const formatted = JSON.stringify(parsed, null, 2);
+      displayOutput(formatted);
+      showStatus(t('ready'));
+    } catch (error) {
+      // Don't show error for real-time typing, just keep previous valid output or clear
+      // Only update statistics for the raw input
+      updateStatistics(input.value);
+    }
+  }, 300);
+}
+
 // Format JSON
 function formatJSON() {
   const inputValue = input.value.trim();
@@ -578,6 +613,9 @@ copyBtn.addEventListener('click', copyToClipboard);
 clearBtn.addEventListener('click', clearAll);
 sampleBtn.addEventListener('click', loadSample);
 langSelect.addEventListener('change', changeLanguage);
+
+// Real-time formatting on input
+input.addEventListener('input', realTimeFormat);
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
