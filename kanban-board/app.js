@@ -703,9 +703,6 @@ function handleTaskSubmit(e) {
 
 // 事件监听器
 function setupEventListeners() {
-    // 语言切换按钮
-    document.getElementById('langToggle').addEventListener('click', toggleLanguage);
-
     // 添加任务按钮
     document.getElementById('addTaskBtn').addEventListener('click', openCreateModal);
 
@@ -958,3 +955,18 @@ function initApp() {
 
 // 页面加载完成后初始化
 document.addEventListener('DOMContentLoaded', initApp);
+
+// Listen for language change messages from parent window
+window.addEventListener('message', (event) => {
+    console.log('Kanban Board received message:', event.data);
+    if (event.data.type === 'languageChange') {
+        const newLanguage = event.data.language;
+        console.log('Kanban Board language change requested:', newLanguage, 'current:', currentLang);
+        if (newLanguage && newLanguage !== currentLang) {
+            currentLang = newLanguage;
+            localStorage.setItem(LANG_STORAGE_KEY, currentLang);
+            console.log('Kanban Board updating language to:', currentLang);
+            updateLanguage();
+        }
+    }
+});
