@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用条款 - 开发者工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            line-height: 1.6;
+            color: #2d3748;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #1a202c;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .content {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section h2 {
+            font-size: 24px;
+            color: #1a202c;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .section h3 {
+            font-size: 18px;
+            color: #2d3748;
+            margin: 20px 0 12px 0;
+        }
+
+        .section p {
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .section ul {
+            margin-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+
+        .update-date {
+            color: #718096;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            .header, .content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .section h2 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← 返回工具集</a>
+
+        <div class="header">
+            <h1 data-i18n="termsTitle">使用条款</h1>
+            <p class="update-date">最后更新日期：2025年1月</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2 data-i18n="intro">引言</h2>
+                <p data-i18n="introText">欢迎使用开发者工具（"dailyinai.com"）。请仔细阅读以下使用条款。通过访问或使用我们的网站和服务，您同意遵守这些条款。</p>
+                <div class="warning">
+                    <p data-i18n="agreementWarning"><strong>重要提示：</strong>如果您不同意这些条款，请不要使用我们的网站。</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 data-i18n="serviceDesc">1. 服务描述</h2>
+                <p data-i18n="serviceDescText">开发者工具提供以下免费在线工具：</p>
+                <ul>
+                    <li data-i18n="jsonParser">JSON 解析器：用于解析、格式化和验证 JSON 数据</li>
+                    <li data-i18n="kanbanBoard">看板工具：用于项目管理和任务协作的可视化看板</li>
+                    <li data-i18n="moreTools">更多工具：我们会持续添加新的实用工具</li>
+                </ul>
+                <p data-i18n="serviceChange">我们保留随时修改、暂停或停止任何服务的权利，恕不另行通知。</p>
+            </div>
+
+            <div class="section">
+                <h2 data-i18n="userObligations">2. 用户义务</h2>
+                <p data-i18n="userObligationsText">使用我们的服务时，您同意：</p>
+                <ul>
+                    <li data-i18n="legalUse">仅将工具用于合法目的</li>
+                    <li data-i18n="noMisuse">不滥用工具或试图破坏其功能</li>
+                    <li data-i18n="noReverse">不对工具进行反向工程、反编译或反汇编</li>
+                    <li data-i18n="respectIntellectual">尊重知识产权，不侵犯他人权利</li>
+                    <li data-i18n="noHarmful">不传输病毒、恶意代码或有害内容</li>
+                    <li data-i18n="complyLaws">遵守所有适用的法律法规</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2 data-i18n="dataHandling">3. 数据处理和隐私</h2>
+                <p data-i18n="dataHandlingText">我们的工具主要在浏览器端运行，您的数据主要存储在本地设备上。我们会：</p>
+                <ul>
+                    <li data-i18n="noStoreSensitive">不会故意收集或存储敏感个人信息</li>
+                    <li data-i18n="localOnly">将工具数据保存在浏览器本地存储中</li>
+                    <li data-i18n="useCookies">使用 cookies 和类似技术改善用户体验</li>
+                    <li data-i18n="googleAds">使用 Google AdSense 展示广告</li>
+                </ul>
+                <p data-i18n="privacyPolicyLink">详情请参阅我们的 <a href="privacy.html" style="color: #667eea;">隐私政策</a>。</p>
+            </div>
+
+            <div class="section">
+                <h2 data-i18n="disclaimers">4. 免责声明</h2>
+
+                <h3 data-i18n="asIs">4.1 "按原样"提供</h3>
+                <p data-i18n="asIsText">我们的服务按"原样"和"可用"基础提供，不提供任何明示或暗示的保证，包括但不限于：</p>
+                <ul>
+                    <li data-i18n="accuracy">准确性、可靠性或可用性</li>
+                    <li data-i18n="merchantability">适销性或适用于特定用途</li>
+                    <li data-i18n="nonInfringement">不侵犯第三方权利</li>
+                    <li data-i18n="security">安全性或无错误、无病毒</li>
+                </ul>
+
+                <h3 data-i18n="availability">4.2 服务可用性</h3>
+                <p data-i18n="availabilityText">我们不保证服务将不间断、及时、安全或无错误。网站可能会因技术问题、维护或其他原因而暂时不可用。</p>
+
+                <h3 data-i18n="noLiability">4.3 责任限制</h3>
+                <p data-i18n="noLiabilityText">在任何情况下，我们都不对以下情况承担责任：</p>
+                <ul>
+                    <li data-i18n="dataLoss">数据丢失或损坏</li>
+                    <li data-i18n="businessLoss">利润损失或业务中断</li>
+                    <li data-i18n="indirectDamages">间接、偶然、特殊或后果性损害</li>
+                    <li data-i18n="toolErrors">因使用工具导致的任何错误或损失</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2 data-i18n="intellectualProperty">5. 知识产权</h2>
+                <p data-i18n="intellectualPropertyText">本网站的所有内容，包括但不限于：</p>
+                <ul>
+                    <li data-i18n="copyright">文本、图形、徽标、图标和图像</li>
+                    <li data-i18n="code">软件代码和脚本</li>
+                    <li data-i18n="design">网站设计和布局</li>
+                    <li data-i18n="trademarks">商标和商号</li>
+                </ul>
+                <p data-i18n="ownership">归我们或我们的许可方所有，受版权法和其他知识产权法保护。未经我们事先书面同意，您不得复制、修改、分发或以其他方式使用这些内容。</p>
+
+                <h3 data-i18n="userData">5.1 用户内容</h3>
+                <p data-i18n="userDataText">您保留对在工具中输入的数据的所有权。通过使用我们的工具，您授予我们处理和显示该数据以提供服务的权利。</p>
+            </div>
+
+            <div class="section">
+                <h2 data-i18n="thirdPartyLinks">6. 第三方链接和服务</h2>
+                <p data-i18n="thirdPartyLinksText">我们的网站可能包含指向第三方网站的链接，或使用第三方服务（如 Google AdSense、Google Analytics）。我们不对这些第三方网站或服务的内容、隐私政策或做法负责。</p>
+                <p data-i18n="thirdPartyWarning">访问第三方网站的风险由您自行承担。我们建议您在提供任何个人信息之前，查看这些第三方的隐私政策和使用条款。</p>
+            </div>
+
+            <div class="section">
+                <h2 data-i18n="termination">7. 服务终止</h2>
+                <p data-i18n="terminationText">我们保留随时暂停或终止您访问服务的权利，原因包括但不限于：</p>
+                <ul>
+                    <li data-i18n="violation">违反这些使用条款</li>
+                    <li data-i18n="abuse">滥用服务或从事欺诈活动</li>
+                    <li data-i18n="technical">技术或安全原因</li>
+                    <li data-i18n="discontinuation">停止提供服务</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2 data-i18n="governingLaw">8. 适用法律</h2>
+                <p data-i18n="governingLawText">这些条款受您所在司法管辖区的法律管辖并依其解释。因这些条款引起的任何争议应通过友好协商解决。</p>
+            </div>
+
+            <div class="section">
+                <h2 data-i18n="changes">9. 条款变更</h2>
+                <p data-i18n="changesText">我们保留随时修改这些使用条款的权利。变更后继续使用我们的服务即表示您接受修改后的条款。重大变更将在网站上公布。</p>
+            </div>
+
+            <div class="section">
+                <h2 data-i18n="contactUs">10. 联系我们</h2>
+                <p data-i18n="contactUsText">如果您对这些使用条款有任何疑问，请通过以下方式联系我们：</p>
+                <ul>
+                    <li data-i18n="website">网站：dailyinai.com</li>
+                    <li data-i18n="viaParent">通过 dailyinai.com 联系</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <p data-i18n="lastUpdated" style="color: #718096; font-size: 14px; margin-top: 32px; padding-top: 16px; border-top: 1px solid #e1e8ed;">这些条款最后更新于 2025 年 1 月。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Language system
+        const translations = {
+            zh: {
+                termsTitle: '使用条款',
+                intro: '引言',
+                introText: '欢迎使用开发者工具（"dailyinai.com"）。请仔细阅读以下使用条款。通过访问或使用我们的网站和服务，您同意遵守这些条款。',
+                agreementWarning: '重要提示：如果您不同意这些条款，请不要使用我们的网站。',
+                serviceDesc: '1. 服务描述',
+                serviceDescText: '开发者工具提供以下免费在线工具：',
+                jsonParser: 'JSON 解析器：用于解析、格式化和验证 JSON 数据',
+                kanbanBoard: '看板工具：用于项目管理和任务协作的可视化看板',
+                moreTools: '更多工具：我们会持续添加新的实用工具',
+                serviceChange: '我们保留随时修改、暂停或停止任何服务的权利，恕不另行通知。',
+                userObligations: '2. 用户义务',
+                userObligationsText: '使用我们的服务时，您同意：',
+                legalUse: '仅将工具用于合法目的',
+                noMisuse: '不滥用工具或试图破坏其功能',
+                noReverse: '不对工具进行反向工程、反编译或反汇编',
+                respectIntellectual: '尊重知识产权，不侵犯他人权利',
+                noHarmful: '不传输病毒、恶意代码或有害内容',
+                complyLaws: '遵守所有适用的法律法规',
+                dataHandling: '3. 数据处理和隐私',
+                dataHandlingText: '我们的工具主要在浏览器端运行，您的数据主要存储在本地设备上。我们会：',
+                noStoreSensitive: '不会故意收集或存储敏感个人信息',
+                localOnly: '将工具数据保存在浏览器本地存储中',
+                useCookies: '使用 cookies 和类似技术改善用户体验',
+                googleAds: '使用 Google AdSense 展示广告',
+                privacyPolicyLink: '详情请参阅我们的 隐私政策。',
+                disclaimers: '4. 免责声明',
+                asIs: '4.1 "按原样"提供',
+                asIsText: '我们的服务按"原样"和"可用"基础提供，不提供任何明示或暗示的保证，包括但不限于：',
+                accuracy: '准确性、可靠性或可用性',
+                merchantability: '适销性或适用于特定用途',
+                nonInfringement: '不侵犯第三方权利',
+                security: '安全性或无错误、无病毒',
+                availability: '4.2 服务可用性',
+                availabilityText: '我们不保证服务将不间断、及时、安全或无错误。网站可能会因技术问题、维护或其他原因而暂时不可用。',
+                noLiability: '4.3 责任限制',
+                noLiabilityText: '在任何情况下，我们都不对以下情况承担责任：',
+                dataLoss: '数据丢失或损坏',
+                businessLoss: '利润损失或业务中断',
+                indirectDamages: '间接、偶然、特殊或后果性损害',
+                toolErrors: '因使用工具导致的任何错误或损失',
+                intellectualProperty: '5. 知识产权',
+                intellectualPropertyText: '本网站的所有内容，包括但不限于：',
+                copyright: '文本、图形、徽标、图标和图像',
+                code: '软件代码和脚本',
+                design: '网站设计和布局',
+                trademarks: '商标和商号',
+                ownership: '归我们或我们的许可方所有，受版权法和其他知识产权法保护。未经我们事先书面同意，您不得复制、修改、分发或以其他方式使用这些内容。',
+                userData: '5.1 用户内容',
+                userDataText: '您保留对在工具中输入的数据的所有权。通过使用我们的工具，您授予我们处理和显示该数据以提供服务的权利。',
+                thirdPartyLinks: '6. 第三方链接和服务',
+                thirdPartyLinksText: '我们的网站可能包含指向第三方网站的链接，或使用第三方服务（如 Google AdSense、Google Analytics）。我们不对这些第三方网站或服务的内容、隐私政策或做法负责。',
+                thirdPartyWarning: '访问第三方网站的风险由您自行承担。我们建议您在提供任何个人信息之前，查看这些第三方的隐私政策和使用条款。',
+                termination: '7. 服务终止',
+                terminationText: '我们保留随时暂停或终止您访问服务的权利，原因包括但不限于：',
+                violation: '违反这些使用条款',
+                abuse: '滥用服务或从事欺诈活动',
+                technical: '技术或安全原因',
+                discontinuation: '停止提供服务',
+                governingLaw: '8. 适用法律',
+                governingLawText: '这些条款受您所在司法管辖区的法律管辖并依其解释。因这些条款引起的任何争议应通过友好协商解决。',
+                changes: '9. 条款变更',
+                changesText: '我们保留随时修改这些使用条款的权利。变更后继续使用我们的服务即表示您接受修改后的条款。重大变更将在网站上公布。',
+                contactUs: '10. 联系我们',
+                contactUsText: '如果您对这些使用条款有任何疑问，请通过以下方式联系我们：',
+                website: '网站：dailyinai.com',
+                viaParent: '通过 dailyinai.com 联系',
+                lastUpdated: '这些条款最后更新于 2025 年 1 月。'
+            },
+            en: {
+                termsTitle: 'Terms of Service',
+                intro: 'Introduction',
+                introText: 'Welcome to Developer Tools ("dailyinai.com"). Please read these Terms of Service carefully. By accessing or using our website and services, you agree to be bound by these terms.',
+                agreementWarning: 'IMPORTANT NOTICE: If you do not agree to these terms, please do not use our website.',
+                serviceDesc: '1. Service Description',
+                serviceDescText: 'Developer Tools provides the following free online tools:',
+                jsonParser: 'JSON Parser: For parsing, formatting, and validating JSON data',
+                kanbanBoard: 'Kanban Board: Visual boards for project management and task collaboration',
+                moreTools: 'More Tools: We continuously add new practical tools',
+                serviceChange: 'We reserve the right to modify, suspend, or discontinue any service at any time without notice.',
+                userObligations: '2. User Obligations',
+                userObligationsText: 'When using our services, you agree to:',
+                legalUse: 'Use the tools only for legal purposes',
+                noMisuse: 'Not misuse the tools or attempt to disrupt their functionality',
+                noReverse: 'Not reverse engineer, decompile, or disassemble the tools',
+                respectIntellectual: 'Respect intellectual property rights and not infringe on others\' rights',
+                noHarmful: 'Not transmit viruses, malicious code, or harmful content',
+                complyLaws: 'Comply with all applicable laws and regulations',
+                dataHandling: '3. Data Handling and Privacy',
+                dataHandlingText: 'Our tools primarily run in the browser, and your data is mainly stored on your local device. We will:',
+                noStoreSensitive: 'Not intentionally collect or store sensitive personal information',
+                localOnly: 'Keep tool data in browser local storage',
+                useCookies: 'Use cookies and similar technologies to improve user experience',
+                googleAds: 'Use Google AdSense to display advertisements',
+                privacyPolicyLink: 'For details, please refer to our Privacy Policy.',
+                disclaimers: '4. Disclaimers',
+                asIs: '4.1 "As Is" Provision',
+                asIsText: 'Our services are provided on an "as is" and "as available" basis, without any warranties, express or implied, including but not limited to:',
+                accuracy: 'Accuracy, reliability, or availability',
+                merchantability: 'Merchantability or fitness for a particular purpose',
+                nonInfringement: 'Non-infringement of third-party rights',
+                security: 'Security or absence of errors or viruses',
+                availability: '4.2 Service Availability',
+                availabilityText: 'We do not guarantee that the service will be uninterrupted, timely, secure, or error-free. The website may be temporarily unavailable due to technical issues, maintenance, or other reasons.',
+                noLiability: '4.3 Limitation of Liability',
+                noLiabilityText: 'In no event shall we be liable for:',
+                dataLoss: 'Data loss or corruption',
+                businessLoss: 'Loss of profit or business interruption',
+                indirectDamages: 'Indirect, incidental, special, or consequential damages',
+                toolErrors: 'Any errors or losses resulting from using the tools',
+                intellectualProperty: '5. Intellectual Property',
+                intellectualPropertyText: 'All content on this website, including but not limited to:',
+                copyright: 'Text, graphics, logos, icons, and images',
+                code: 'Software code and scripts',
+                design: 'Website design and layout',
+                trademarks: 'Trademarks and trade names',
+                ownership: 'Are owned by us or our licensors and are protected by copyright and other intellectual property laws. You may not reproduce, modify, distribute, or otherwise use this content without our prior written consent.',
+                userData: '5.1 User Content',
+                userDataText: 'You retain ownership of data you input in the tools. By using our tools, you grant us the right to process and display that data to provide the service.',
+                thirdPartyLinks: '6. Third-Party Links and Services',
+                thirdPartyLinksText: 'Our website may contain links to third-party websites or use third-party services (such as Google AdSense, Google Analytics). We are not responsible for the content, privacy policies, or practices of these third-party websites or services.',
+                thirdPartyWarning: 'You access third-party websites at your own risk. We recommend reviewing these third parties\' privacy policies and terms of service before providing any personal information.',
+                termination: '7. Service Termination',
+                terminationText: 'We reserve the right to suspend or terminate your access to the service at any time, for reasons including but not limited to:',
+                violation: 'Violation of these Terms of Service',
+                abuse: 'Abuse of service or fraudulent activities',
+                technical: 'Technical or security reasons',
+                discontinuation: 'Discontinuation of the service',
+                governingLaw: '8. Governing Law',
+                governingLawText: 'These terms are governed by and construed in accordance with the laws of your jurisdiction. Any disputes arising from these terms shall be resolved through friendly negotiation.',
+                changes: '9. Changes to Terms',
+                changesText: 'We reserve the right to modify these Terms of Service at any time. Continued use of our services after changes constitutes acceptance of the modified terms. Significant changes will be posted on the website.',
+                contactUs: '10. Contact Us',
+                contactUsText: 'If you have any questions about these Terms of Service, please contact us:',
+                website: 'Website: dailyinai.com',
+                viaParent: 'Contact through dailyinai.com',
+                lastUpdated: 'These terms were last updated in January 2025.'
+            }
+        };
+
+        // Get language from localStorage or default to Chinese
+        let currentLang = localStorage.getItem('language') || 'zh';
+
+        // Initialize language on page load
+        function initLanguage() {
+            // Set HTML lang attribute
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+
+            // Update all elements with data-i18n attribute
+            for (const element of document.querySelectorAll('[data-i18n]')) {
+                const key = element.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    element.innerHTML = translations[currentLang][key]; // Use innerHTML to allow links
+                }
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', initLanguage);
+    </script>
+</body>
+</html>
