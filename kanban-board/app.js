@@ -146,12 +146,13 @@ const translations = {
     }
 };
 
-let currentLang = localStorage.getItem(LANG_STORAGE_KEY) || 'en';
+let currentLang = localStorage.getItem('language') || localStorage.getItem(LANG_STORAGE_KEY) || 'en';
 
 // 切换语言
 function toggleLanguage() {
     currentLang = currentLang === 'zh' ? 'en' : 'zh';
-    localStorage.setItem(LANG_STORAGE_KEY, currentLang);
+    localStorage.setItem('language', currentLang);
+    localStorage.setItem(LANG_STORAGE_KEY, currentLang); // Keep old key for compatibility
     updateLanguage();
 }
 
@@ -938,8 +939,6 @@ function formatDate(date) {
 
 // 初始化应用
 function initApp() {
-    console.log('看板应用初始化');
-
     // 检查 LocalStorage
     if (!isLocalStorageAvailable()) {
         showStorageWarning();
@@ -958,14 +957,37 @@ document.addEventListener('DOMContentLoaded', initApp);
 
 // Listen for language change messages from parent window
 window.addEventListener('message', (event) => {
-    console.log('Kanban Board received message:', event.data);
     if (event.data.type === 'languageChange') {
         const newLanguage = event.data.language;
-        console.log('Kanban Board language change requested:', newLanguage, 'current:', currentLang);
+
+        if (newLanguage) {
+            if (newLanguage !== currentLang) {
+                currentLang = newLanguage;
+            }
+            localStorage.setItem('language', currentLang);
+            localStorage.setItem(LANG_STORAGE_KEY, currentLang);
+            updateLanguage();
+        }
+    }
+});
+
+// Listen for localStorage changes (more reliable than postMessage)
+window.addEventListener('storage', (event) => {
+    if (event.key === 'language') {
+        const newLanguage = event.newValue;
+
         if (newLanguage && newLanguage !== currentLang) {
             currentLang = newLanguage;
-            localStorage.setItem(LANG_STORAGE_KEY, currentLang);
-            console.log('Kanban Board updating language to:', currentLang);
+            updateLanguage();
+        } else if (newLanguage === currentLang) {
+            updateLanguage();
+        }
+    } else if (event.key === 'languageChange') {
+        const newLanguage = localStorage.getItem('language');
+        if (newLanguage && newLanguage !== currentLang) {
+            currentLang = newLanguage;
+            updateLanguage();
+        } else if (newLanguage === currentLang) {
             updateLanguage();
         }
     }
