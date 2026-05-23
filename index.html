@@ -193,6 +193,37 @@
             background: #f5f7fa;
         }
 
+        /* Footer */
+        .footer {
+            background: white;
+            border-top: 1px solid #e1e8ed;
+            padding: 16px 24px;
+            flex-shrink: 0;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .footer-link {
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: #667eea;
+        }
+
+        .footer-separator {
+            color: #cbd5e0;
+            font-size: 13px;
+        }
+
         .tool-panel {
             display: none;
             width: 100%;
@@ -236,6 +267,14 @@
                 cursor: pointer;
                 padding: 4px;
             }
+
+            .footer {
+                padding: 12px 16px;
+            }
+
+            .footer-link {
+                font-size: 12px;
+            }
         }
 
         @media (min-width: 769px) {
@@ -252,7 +291,7 @@
             <div class="sidebar-header">
                 <div class="logo">
                     <div class="logo-icon">🛠️</div>
-                    <span>开发者工具</span>
+                    <span data-i18n="appTitle">开发者工具</span>
                 </div>
             </div>
 
@@ -266,21 +305,6 @@
                     <div class="nav-item" data-tool="kanban-board">
                         <span class="nav-icon">📋</span>
                         <span data-i18n="kanbanBoard">看板工具</span>
-                    </div>
-                </div>
-                <div class="nav-section">
-                    <div class="nav-section-title" data-i18n="info">信息</div>
-                    <div class="nav-item" onclick="window.location.href='about.html'">
-                        <span class="nav-icon">ℹ️</span>
-                        <span data-i18n="about">关于</span>
-                    </div>
-                    <div class="nav-item" onclick="window.location.href='privacy.html'">
-                        <span class="nav-icon">🔒</span>
-                        <span data-i18n="privacy">隐私政策</span>
-                    </div>
-                    <div class="nav-item" onclick="window.location.href='terms.html'">
-                        <span class="nav-icon">📄</span>
-                        <span data-i18n="terms">使用条款</span>
                     </div>
                 </div>
             </nav>
@@ -303,12 +327,23 @@
 
             <div class="content-area">
                 <div id="json-parser" class="tool-panel active">
-                    <iframe src="json-parser/index.html" title="JSON Parser"></iframe>
+                    <iframe src="../json-parser/index.html" title="JSON Parser"></iframe>
                 </div>
                 <div id="kanban-board" class="tool-panel">
-                    <iframe src="kanban-board/index.html" title="Kanban Board"></iframe>
+                    <iframe src="../kanban-board/index.html" title="Kanban Board"></iframe>
                 </div>
             </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer-links">
+                    <a href="about.html" class="footer-link" data-i18n="about">关于我们</a>
+                    <span class="footer-separator">•</span>
+                    <a href="privacy.html" class="footer-link" data-i18n="privacy">隐私政策</a>
+                    <span class="footer-separator">•</span>
+                    <a href="terms.html" class="footer-link" data-i18n="terms">使用条款</a>
+                </div>
+            </footer>
         </main>
     </div>
 
@@ -316,22 +351,22 @@
         // Language system
         const translations = {
             zh: {
+                appTitle: '开发者工具',
                 tools: '工具',
                 jsonParser: 'JSON 解析器',
                 kanbanBoard: '看板工具',
-                info: '信息',
-                about: '关于',
+                about: '关于我们',
                 privacy: '隐私政策',
                 terms: '使用条款'
             },
             en: {
+                appTitle: 'Developer Tools',
                 tools: 'Tools',
                 jsonParser: 'JSON Parser',
                 kanbanBoard: 'Kanban Board',
-                info: 'Info',
-                about: 'About',
-                privacy: 'Privacy',
-                terms: 'Terms'
+                about: 'About US',
+                privacy: 'Privacy Policy',
+                terms: 'Terms of Service'
             }
         };
 
@@ -352,7 +387,8 @@
             currentLang = currentLang === 'zh' ? 'en' : 'zh';
             localStorage.setItem('language', currentLang);
             updateLanguageUI();
-            notifyChildFrames();
+            // Use localStorage event instead of postMessage
+            localStorage.setItem('languageChange', Date.now());
         }
 
         function updateLanguageUI() {
@@ -377,33 +413,51 @@
 
             // Function to update iframe language
             function updateFrameLang(frame, toolName) {
-                if (!frame || !frame.contentWindow) return;
+                if (!frame) {
+                    return;
+                }
+
+                if (!frame.contentWindow) {
+                    return;
+                }
 
                 // Update lang attribute
                 try {
                     const frameDoc = frame.contentDocument || frame.contentWindow.document;
                     if (frameDoc && frameDoc.documentElement) {
                         frameDoc.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
-                        console.log(`Updated ${toolName} lang attribute to:`, frameDoc.documentElement.lang);
                     }
                 } catch (e) {
-                    console.warn(`Could not update ${toolName} lang attribute:`, e);
+                    // Ignore cross-origin errors
                 }
 
                 // Send message to trigger language update in JS
-                frame.contentWindow.postMessage({
+                const message = {
                     type: 'languageChange',
                     language: currentLang
-                }, '*');
+                };
+
+                try {
+                    frame.contentWindow.postMessage(message, '*');
+                } catch (e) {
+                    // Ignore errors
+                }
             }
 
-            if (jsonParserFrame) {
-                updateFrameLang(jsonParserFrame, 'JSON Parser');
-            }
+            // Try multiple times with delays for iframes that might still be loading
+            const attempts = [0, 100, 300, 500];
 
-            if (kanbanBoardFrame) {
-                updateFrameLang(kanbanBoardFrame, 'Kanban Board');
-            }
+            attempts.forEach((delay, index) => {
+                setTimeout(() => {
+                    if (jsonParserFrame) {
+                        updateFrameLang(jsonParserFrame, 'JSON Parser');
+                    }
+
+                    if (kanbanBoardFrame) {
+                        updateFrameLang(kanbanBoardFrame, 'Kanban Board');
+                    }
+                }, delay);
+            });
         }
 
         // Navigation
@@ -454,7 +508,6 @@
                         const frameDoc = this.contentDocument || this.contentWindow.document;
                         if (frameDoc && frameDoc.documentElement) {
                             frameDoc.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
-                            console.log('JSON Parser iframe loaded, lang set to:', frameDoc.documentElement.lang);
                         }
                         this.contentWindow.postMessage({
                             type: 'languageChange',
@@ -470,7 +523,6 @@
                         const frameDoc = this.contentDocument || this.contentWindow.document;
                         if (frameDoc && frameDoc.documentElement) {
                             frameDoc.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
-                            console.log('Kanban Board iframe loaded, lang set to:', frameDoc.documentElement.lang);
                         }
                         this.contentWindow.postMessage({
                             type: 'languageChange',
