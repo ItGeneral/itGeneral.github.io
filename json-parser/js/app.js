@@ -15,7 +15,6 @@ Example:
     validate: 'Validate',
     copy: 'Copy',
     clear: 'Clear',
-    sample: 'Sample',
     ready: 'Ready',
     formatSuccess: '✓ JSON formatted successfully',
     compressSuccess: '✓ JSON compressed successfully',
@@ -24,7 +23,6 @@ Example:
     nothingToCopy: '⚠ Nothing to copy',
     copySuccess: '✓ Copied to clipboard',
     copyFailed: '✗ Copy failed',
-    sampleLoaded: '✓ Sample data loaded',
     chars: 'Chars',
     lines: 'Lines',
     nesting: 'Nesting',
@@ -63,7 +61,6 @@ Example:
     validate: '验证',
     copy: '复制',
     clear: '清空',
-    sample: '示例',
     ready: '就绪',
     formatSuccess: '✓ JSON 格式化成功',
     compressSuccess: '✓ JSON 压缩成功',
@@ -72,7 +69,6 @@ Example:
     nothingToCopy: '⚠ 没有可复制的内容',
     copySuccess: '✓ 已复制到剪贴板',
     copyFailed: '✗ 复制失败',
-    sampleLoaded: '✓ 已加载示例数据',
     chars: '字符',
     lines: '行数',
     nesting: '嵌套层级',
@@ -109,21 +105,27 @@ function t(key) {
 // Update UI text based on current language
 function updateLanguage() {
   // Update text content
-  document.querySelectorAll('[data-i18n]').forEach(element => {
+  const i18nElements = document.querySelectorAll('[data-i18n]');
+  i18nElements.forEach(element => {
     const key = element.getAttribute('data-i18n');
-    element.textContent = t(key);
+    const translation = t(key);
+    element.textContent = translation;
   });
 
   // Update placeholders
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+  const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+  placeholderElements.forEach(element => {
     const key = element.getAttribute('data-i18n-placeholder');
-    element.placeholder = t(key);
+    const translation = t(key);
+    element.placeholder = translation;
   });
 
   // Update document language
   document.documentElement.lang = currentLanguage === 'en' ? 'en' : 'zh-CN';
 
-  // Save to localStorage
+  // Save to localStorage with unified key
+  localStorage.setItem('language', currentLanguage);
+  // Also save to old key for backward compatibility
   localStorage.setItem('jsonParserLanguage', currentLanguage);
 
   // Update statistics display with new language
@@ -151,7 +153,7 @@ const compressBtn = document.getElementById('compressBtn');
 const validateBtn = document.getElementById('validateBtn');
 const copyBtn = document.getElementById('copyBtn');
 const clearBtn = document.getElementById('clearBtn');
-const sampleBtn = document.getElementById('sampleBtn');
+
 // Debounce timer for real-time formatting
 let debounceTimer = null;
 
@@ -563,47 +565,12 @@ async function copyToClipboard() {
   }
 }
 
-// Load sample data
-function loadSample() {
-  const sampleJSON = currentLanguage === 'en' ? {
-    "name": "John Doe",
-    "age": 30,
-    "city": "New York",
-    "hobbies": ["Reading", "Traveling", "Photography"],
-    "address": {
-      "street": "123 Main St",
-      "district": "Manhattan",
-      "zipCode": "10001"
-    },
-    "isActive": true,
-    "balance": null
-  } : {
-    "name": "张三",
-    "age": 30,
-    "city": "北京",
-    "hobbies": ["阅读", "旅游", "摄影"],
-    "address": {
-      "street": "长安街1号",
-      "district": "东城区",
-      "zipCode": "100001"
-    },
-    "isActive": true,
-    "balance": null
-  };
-
-  const sampleString = JSON.stringify(sampleJSON, null, 2);
-  input.value = sampleString;
-  showStatus(t('sampleLoaded'), 'success');
-  updateStatistics(sampleString);
-}
-
 // Event listeners for buttons
 formatBtn.addEventListener('click', formatJSON);
 compressBtn.addEventListener('click', compressJSON);
 validateBtn.addEventListener('click', validateJSON);
 copyBtn.addEventListener('click', copyToClipboard);
 clearBtn.addEventListener('click', clearAll);
-sampleBtn.addEventListener('click', loadSample);
 
 // Real-time formatting on input
 input.addEventListener('input', realTimeFormat);
@@ -611,7 +578,7 @@ input.addEventListener('input', realTimeFormat);
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   // Load saved language preference or default to 'en'
-  const savedLanguage = localStorage.getItem('jsonParserLanguage');
+  const savedLanguage = localStorage.getItem('language') || localStorage.getItem('jsonParserLanguage');
   if (savedLanguage && (savedLanguage === 'en' || savedLanguage === 'zh')) {
     currentLanguage = savedLanguage;
   }
@@ -658,13 +625,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Listen for language change messages from parent window
 window.addEventListener('message', (event) => {
-  console.log('JSON Parser received message:', event.data);
   if (event.data.type === 'languageChange') {
     const newLanguage = event.data.language;
-    console.log('JSON Parser language change requested:', newLanguage, 'current:', currentLanguage);
+
+    if (newLanguage) {
+      if (newLanguage !== currentLanguage) {
+        currentLanguage = newLanguage;
+      }
+      updateLanguage();
+    }
+  }
+});
+
+// Listen for localStorage changes (more reliable than postMessage)
+window.addEventListener('storage', (event) => {
+  if (event.key === 'language') {
+    const newLanguage = event.newValue;
+
     if (newLanguage && newLanguage !== currentLanguage) {
       currentLanguage = newLanguage;
-      console.log('JSON Parser updating language to:', currentLanguage);
+      updateLanguage();
+    } else if (newLanguage === currentLanguage) {
+      updateLanguage();
+    }
+  } else if (event.key === 'languageChange') {
+    // Triggered when parent updates languageChange timestamp
+    const newLanguage = localStorage.getItem('language');
+    if (newLanguage && newLanguage !== currentLanguage) {
+      currentLanguage = newLanguage;
+      updateLanguage();
+    } else if (newLanguage === currentLanguage) {
       updateLanguage();
     }
   }
