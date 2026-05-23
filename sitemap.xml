@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <!-- 主页/工具集页面 -->
+   <url>
+      <loc>https://dailyinai.com/index.html</loc>
+      <lastmod>2026-05-23</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+   </url>
+
+   <!-- 关于页面 -->
+   <url>
+      <loc>https://dailyinai.com/about.html</loc>
+      <lastmod>2026-05-23</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.8</priority>
+   </url>
+
+   <!-- 隐私政策页面 -->
+   <url>
+      <loc>https://dailyinai.com/privacy.html</loc>
+      <lastmod>2026-05-23</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
+
+   <!-- 使用条款页面 -->
+   <url>
+      <loc>https://dailyinai.com/terms.html</loc>
+      <lastmod>2026-05-23</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+   </url>
+
+   <!-- JSON 解析器工具 -->
+   <url>
+      <loc>https://dailyinai.com/json-parser/index.html</loc>
+      <lastmod>2026-05-23</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.9</priority>
+   </url>
+
+   <!-- 看板工具 -->
+   <url>
+      <loc>https://dailyinai.com/kanban-board/index.html</loc>
+      <lastmod>2026-05-23</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.9</priority>
+   </url>
+</urlset>
