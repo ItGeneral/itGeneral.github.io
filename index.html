@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具集</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 240px;
+            background: white;
+            border-right: 1px solid #e1e8ed;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 8px 12px;
+            margin-bottom: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #f7fafc;
+            color: #667eea;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+            width: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            height: 60px;
+            background: white;
+            border-bottom: 1px solid #e1e8ed;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            flex-shrink: 0;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border: 1px solid #e1e8ed;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4a5568;
+            background: white;
+        }
+
+        .lang-switcher:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+        }
+
+        .lang-icon {
+            font-size: 16px;
+        }
+
+        .lang-text {
+            min-width: 50px;
+        }
+
+        .content-area {
+            flex: 1;
+            overflow: hidden;
+            background: #f5f7fa;
+        }
+
+        .tool-panel {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .tool-panel.active {
+            display: block;
+        }
+
+        .tool-panel iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -240px;
+                top: 0;
+                bottom: 0;
+                z-index: 1000;
+                transition: left 0.3s;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+                margin-right: 12px;
+                background: none;
+                border: none;
+                font-size: 20px;
+                cursor: pointer;
+                padding: 4px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">🛠️</div>
+                    <span>开发者工具</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title" data-i18n="tools">工具</div>
+                    <div class="nav-item active" data-tool="json-parser">
+                        <span class="nav-icon">📝</span>
+                        <span data-i18n="jsonParser">JSON 解析器</span>
+                    </div>
+                    <div class="nav-item" data-tool="kanban-board">
+                        <span class="nav-icon">📋</span>
+                        <span data-i18n="kanbanBoard">看板工具</span>
+                    </div>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title" data-i18n="info">信息</div>
+                    <div class="nav-item" onclick="window.location.href='about.html'">
+                        <span class="nav-icon">ℹ️</span>
+                        <span data-i18n="about">关于</span>
+                    </div>
+                    <div class="nav-item" onclick="window.location.href='privacy.html'">
+                        <span class="nav-icon">🔒</span>
+                        <span data-i18n="privacy">隐私政策</span>
+                    </div>
+                    <div class="nav-item" onclick="window.location.href='terms.html'">
+                        <span class="nav-icon">📄</span>
+                        <span data-i18n="terms">使用条款</span>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                    <h1 class="page-title" id="pageTitle" data-i18n="jsonParser">JSON 解析器</h1>
+                </div>
+                <div class="user-info">
+                    <div class="lang-switcher" onclick="toggleLanguage()">
+                        <span class="lang-icon">🌐</span>
+                        <span class="lang-text" id="langText">中文</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div id="json-parser" class="tool-panel active">
+                    <iframe src="json-parser/index.html" title="JSON Parser"></iframe>
+                </div>
+                <div id="kanban-board" class="tool-panel">
+                    <iframe src="kanban-board/index.html" title="Kanban Board"></iframe>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Language system
+        const translations = {
+            zh: {
+                tools: '工具',
+                jsonParser: 'JSON 解析器',
+                kanbanBoard: '看板工具',
+                info: '信息',
+                about: '关于',
+                privacy: '隐私政策',
+                terms: '使用条款'
+            },
+            en: {
+                tools: 'Tools',
+                jsonParser: 'JSON Parser',
+                kanbanBoard: 'Kanban Board',
+                info: 'Info',
+                about: 'About',
+                privacy: 'Privacy',
+                terms: 'Terms'
+            }
+        };
+
+        let currentLang = localStorage.getItem('language') || 'zh';
+        const pageTitle = document.getElementById('pageTitle');
+        const toolTitles = {
+            'json-parser': { zh: 'JSON 解析器', en: 'JSON Parser' },
+            'kanban-board': { zh: '看板工具', en: 'Kanban Board' }
+        };
+
+        // Initialize language on page load
+        function initLanguage() {
+            updateLanguageUI();
+            notifyChildFrames();
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            localStorage.setItem('language', currentLang);
+            updateLanguageUI();
+            notifyChildFrames();
+        }
+
+        function updateLanguageUI() {
+            const lang = currentLang;
+            const langText = document.getElementById('langText');
+
+            // Update language switcher text
+            langText.textContent = lang === 'zh' ? '中文' : 'English';
+
+            // Update all elements with data-i18n attribute
+            for (const element of document.querySelectorAll('[data-i18n]')) {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            }
+        }
+
+        function notifyChildFrames() {
+            const jsonParserFrame = document.querySelector('#json-parser iframe');
+            const kanbanBoardFrame = document.querySelector('#kanban-board iframe');
+
+            // Function to update iframe language
+            function updateFrameLang(frame, toolName) {
+                if (!frame || !frame.contentWindow) return;
+
+                // Update lang attribute
+                try {
+                    const frameDoc = frame.contentDocument || frame.contentWindow.document;
+                    if (frameDoc && frameDoc.documentElement) {
+                        frameDoc.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+                        console.log(`Updated ${toolName} lang attribute to:`, frameDoc.documentElement.lang);
+                    }
+                } catch (e) {
+                    console.warn(`Could not update ${toolName} lang attribute:`, e);
+                }
+
+                // Send message to trigger language update in JS
+                frame.contentWindow.postMessage({
+                    type: 'languageChange',
+                    language: currentLang
+                }, '*');
+            }
+
+            if (jsonParserFrame) {
+                updateFrameLang(jsonParserFrame, 'JSON Parser');
+            }
+
+            if (kanbanBoardFrame) {
+                updateFrameLang(kanbanBoardFrame, 'Kanban Board');
+            }
+        }
+
+        // Navigation
+        for (const navItem of document.querySelectorAll('.nav-item')) {
+            navItem.addEventListener('click', function() {
+                for (const item of document.querySelectorAll('.nav-item')) {
+                    item.classList.remove('active');
+                }
+                for (const panel of document.querySelectorAll('.tool-panel')) {
+                    panel.classList.remove('active');
+                }
+
+                this.classList.add('active');
+                const toolId = this.dataset.tool;
+                document.getElementById(toolId).classList.add('active');
+                pageTitle.textContent = toolTitles[toolId][currentLang];
+
+                // Close sidebar on mobile after selection
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.sidebar').classList.remove('open');
+                }
+
+                // Notify child frame of language after switching
+                setTimeout(notifyChildFrames, 100);
+            });
+        }
+
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('open');
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', initLanguage);
+
+        // Also notify child frames when they load
+        window.addEventListener('load', function() {
+            setTimeout(notifyChildFrames, 500);
+        });
+
+        // Listen for iframe load events and update language
+        function setupIframeListeners() {
+            const jsonParserFrame = document.querySelector('#json-parser iframe');
+            const kanbanBoardFrame = document.querySelector('#kanban-board iframe');
+
+            if (jsonParserFrame) {
+                jsonParserFrame.addEventListener('load', function() {
+                    setTimeout(() => {
+                        const frameDoc = this.contentDocument || this.contentWindow.document;
+                        if (frameDoc && frameDoc.documentElement) {
+                            frameDoc.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+                            console.log('JSON Parser iframe loaded, lang set to:', frameDoc.documentElement.lang);
+                        }
+                        this.contentWindow.postMessage({
+                            type: 'languageChange',
+                            language: currentLang
+                        }, '*');
+                    }, 100);
+                });
+            }
+
+            if (kanbanBoardFrame) {
+                kanbanBoardFrame.addEventListener('load', function() {
+                    setTimeout(() => {
+                        const frameDoc = this.contentDocument || this.contentWindow.document;
+                        if (frameDoc && frameDoc.documentElement) {
+                            frameDoc.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+                            console.log('Kanban Board iframe loaded, lang set to:', frameDoc.documentElement.lang);
+                        }
+                        this.contentWindow.postMessage({
+                            type: 'languageChange',
+                            language: currentLang
+                        }, '*');
+                    }, 100);
+                });
+            }
+        }
+
+        // Setup iframe listeners after DOM is ready
+        window.addEventListener('DOMContentLoaded', setupIframeListeners);
+    </script>
+</body>
+</html>
