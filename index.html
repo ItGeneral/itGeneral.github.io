@@ -8,7 +8,22 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2795550299175923"
          crossorigin="anonymous"></script>
-    
+
+    <!-- Google Consent Mode / Consent Management Platform -->
+    <!-- 在 AdSense 后台完成设置后，将 Google 提供的同意管理代码粘贴到这里 -->
+    <!-- 代码位置：AdSense → 设置 → 隐私和消息 → 同意管理 -->
+    <!--
+    示例代码格式（仅供参考，请使用 AdSense 后台提供的实际代码）:
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'analytics_storage': 'denied'
+    });
+    </script>
+    -->
+
     <style>
         * {
             margin: 0;
@@ -198,6 +213,143 @@
             background: #f5f7fa;
         }
 
+        /* Welcome Section */
+        .welcome-section {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 40px 20px;
+            background: #f5f7fa;
+        }
+
+        .welcome-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .welcome-content h2 {
+            font-size: 32px;
+            color: #1a202c;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .welcome-content > p {
+            font-size: 16px;
+            color: #4a5568;
+            line-height: 1.8;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .tool-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .tool-card h3 {
+            font-size: 20px;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .tool-card p {
+            font-size: 14px;
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .features-section {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .features-section h3 {
+            font-size: 24px;
+            color: #1a202c;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .features-list li {
+            font-size: 15px;
+            color: #4a5568;
+            padding: 12px 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .start-button {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .welcome-section {
+                padding: 24px 16px;
+            }
+
+            .welcome-content h2 {
+                font-size: 24px;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Footer */
         .footer {
             background: white;
@@ -303,7 +455,11 @@
             <nav class="nav-menu">
                 <div class="nav-section">
                     <div class="nav-section-title" data-i18n="tools">工具</div>
-                    <div class="nav-item active" data-tool="json-parser">
+                    <div class="nav-item active" data-tool="welcome">
+                        <span class="nav-icon">🏠</span>
+                        <span data-i18n="home">首页</span>
+                    </div>
+                    <div class="nav-item" data-tool="json-parser">
                         <span class="nav-icon">📝</span>
                         <span data-i18n="jsonParser">JSON 解析器</span>
                     </div>
@@ -320,7 +476,7 @@
             <div class="top-bar">
                 <div class="top-bar-left">
                     <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
-                    <h1 class="page-title" id="pageTitle" data-i18n="jsonParser">JSON 解析器</h1>
+                    <h1 class="page-title" id="pageTitle" data-i18n="appTitle">开发者工具</h1>
                 </div>
                 <div class="user-info">
                     <div class="lang-switcher" onclick="toggleLanguage()">
@@ -331,7 +487,52 @@
             </div>
 
             <div class="content-area">
-                <div id="json-parser" class="tool-panel active">
+                <!-- Welcome Section - Visible content for SEO and AdSense -->
+                <div class="welcome-section" id="welcome-section">
+                    <div class="welcome-content">
+                        <h2 data-i18n="welcomeTitle">欢迎使用开发者工具</h2>
+                        <p data-i18n="welcomeDescription">
+                            我们提供一系列高效的在线开发工具，帮助开发者提高工作效率。所有工具均在浏览器中运行，
+                            数据安全可靠，不会上传到服务器。
+                        </p>
+
+                        <div class="tools-grid">
+                            <div class="tool-card">
+                                <div class="tool-icon">📝</div>
+                                <h3 data-i18n="jsonParser">JSON 解析器</h3>
+                                <p data-i18n="jsonParserDesc">
+                                    强大的 JSON 格式化、验证和转换工具。支持语法高亮、错误检测和数据导出。
+                                </p>
+                            </div>
+
+                            <div class="tool-card">
+                                <div class="tool-icon">📋</div>
+                                <h3 data-i18n="kanbanBoard">看板工具</h3>
+                                <p data-i18n="kanbanBoardDesc">
+                                    可视化项目管理工具，支持任务拖拽、进度追踪和团队协作。
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="features-section">
+                            <h3 data-i18n="featuresTitle">为什么选择我们？</h3>
+                            <ul class="features-list">
+                                <li data-i18n="feature1">✨ 所有工具免费使用，无需注册</li>
+                                <li data-i18n="feature2">🔒 数据本地处理，保护隐私安全</li>
+                                <li data-i18n="feature3">🌐 支持中英文双语界面</li>
+                                <li data-i18n="feature4">📱 响应式设计，支持移动端访问</li>
+                                <li data-i18n="feature5">⚡ 快速响应，高效便捷</li>
+                            </ul>
+                        </div>
+
+                        <button class="start-button" onclick="startUsingTools()" data-i18n="startButton">
+                            开始使用工具
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tool Panels (IFRAMEs) -->
+                <div id="json-parser" class="tool-panel">
                     <iframe src="../json-parser/index.html" title="JSON Parser"></iframe>
                 </div>
                 <div id="kanban-board" class="tool-panel">
@@ -358,29 +559,57 @@
             zh: {
                 appTitle: '开发者工具',
                 tools: '工具',
+                home: '首页',
                 jsonParser: 'JSON 解析器',
                 kanbanBoard: '看板工具',
                 about: '关于我们',
                 privacy: '隐私政策',
-                terms: '使用条款'
+                terms: '使用条款',
+                welcomeTitle: '欢迎使用开发者工具',
+                welcomeDescription: '我们提供一系列高效的在线开发工具，帮助开发者提高工作效率。所有工具均在浏览器中运行，数据安全可靠，不会上传到服务器。',
+                jsonParserDesc: '强大的 JSON 格式化、验证和转换工具。支持语法高亮、错误检测和数据导出。',
+                kanbanBoardDesc: '可视化项目管理工具，支持任务拖拽、进度追踪和团队协作。',
+                featuresTitle: '为什么选择我们？',
+                feature1: '✨ 所有工具免费使用，无需注册',
+                feature2: '🔒 数据本地处理，保护隐私安全',
+                feature3: '🌐 支持中英文双语界面',
+                feature4: '📱 响应式设计，支持移动端访问',
+                feature5: '⚡ 快速响应，高效便捷',
+                startButton: '开始使用工具'
             },
             en: {
                 appTitle: 'Developer Tools',
                 tools: 'Tools',
+                home: 'Home',
                 jsonParser: 'JSON Parser',
                 kanbanBoard: 'Kanban Board',
-                about: 'About US',
+                about: 'About Us',
                 privacy: 'Privacy Policy',
-                terms: 'Terms of Service'
+                terms: 'Terms of Service',
+                welcomeTitle: 'Welcome to Developer Tools',
+                welcomeDescription: 'We provide a series of efficient online development tools to help developers improve productivity. All tools run in your browser with secure, local data processing.',
+                jsonParserDesc: 'Powerful JSON formatting, validation, and conversion tool. Supports syntax highlighting, error detection, and data export.',
+                kanbanBoardDesc: 'Visual project management tool with drag-and-drop tasks, progress tracking, and team collaboration.',
+                featuresTitle: 'Why Choose Us?',
+                feature1: '✨ All tools are free to use, no registration required',
+                feature2: '🔒 Local data processing protects your privacy',
+                feature3: '🌐 Bilingual interface (Chinese and English)',
+                feature4: '📱 Responsive design, mobile-friendly',
+                feature5: '⚡ Fast response, efficient and convenient',
+                startButton: 'Start Using Tools'
             }
         };
 
         let currentLang = localStorage.getItem('language') || 'zh';
         const pageTitle = document.getElementById('pageTitle');
         const toolTitles = {
+            'welcome': { zh: '开发者工具', en: 'Developer Tools' },
             'json-parser': { zh: 'JSON 解析器', en: 'JSON Parser' },
             'kanban-board': { zh: '看板工具', en: 'Kanban Board' }
         };
+
+        // Initialize - show welcome section by default
+        let currentView = 'welcome';
 
         // Initialize language on page load
         function initLanguage() {
@@ -477,8 +706,20 @@
 
                 this.classList.add('active');
                 const toolId = this.dataset.tool;
-                document.getElementById(toolId).classList.add('active');
-                pageTitle.textContent = toolTitles[toolId][currentLang];
+
+                // Check if it's the welcome/home page
+                if (toolId === 'welcome') {
+                    // Show welcome section
+                    document.getElementById('welcome-section').style.display = 'block';
+                    pageTitle.textContent = toolTitles[toolId][currentLang];
+                } else {
+                    // Hide welcome section and show tool
+                    document.getElementById('welcome-section').style.display = 'none';
+                    document.getElementById(toolId).classList.add('active');
+                    pageTitle.textContent = toolTitles[toolId][currentLang];
+                }
+
+                currentView = toolId;
 
                 // Close sidebar on mobile after selection
                 if (window.innerWidth <= 768) {
@@ -490,12 +731,65 @@
             });
         }
 
+        // Tool cards click handler
+        function setupToolCards() {
+            const toolCards = document.querySelectorAll('.tool-card');
+            toolCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const icon = this.querySelector('.tool-icon').textContent;
+                    let toolId = '';
+
+                    if (icon.includes('📝')) {
+                        toolId = 'json-parser';
+                    } else if (icon.includes('📋')) {
+                        toolId = 'kanban-board';
+                    }
+
+                    if (toolId) {
+                        // Find and click the corresponding nav item
+                        const navItem = document.querySelector(`[data-tool="${toolId}"]`);
+                        if (navItem) {
+                            navItem.click();
+                        }
+                    }
+                });
+            });
+        }
+
+        // Start using tools button
+        function startUsingTools() {
+            // Click the first tool (JSON Parser)
+            const firstTool = document.querySelector('[data-tool="json-parser"]');
+            if (firstTool) {
+                firstTool.click();
+            }
+        }
+
+        // Home/Welcome button in sidebar (if needed)
+        function showWelcome() {
+            // Hide all tool panels
+            for (const panel of document.querySelectorAll('.tool-panel')) {
+                panel.classList.remove('active');
+            }
+            // Remove active from nav items
+            for (const item of document.querySelectorAll('.nav-item')) {
+                item.classList.remove('active');
+            }
+            // Show welcome section
+            document.getElementById('welcome-section').style.display = 'block';
+            pageTitle.textContent = currentLang === 'zh' ? '开发者工具' : 'Developer Tools';
+            currentView = 'welcome';
+        }
+
         function toggleSidebar() {
             document.querySelector('.sidebar').classList.toggle('open');
         }
 
         // Initialize on page load
-        window.addEventListener('DOMContentLoaded', initLanguage);
+        window.addEventListener('DOMContentLoaded', function() {
+            initLanguage();
+            setupToolCards();
+        });
 
         // Also notify child frames when they load
         window.addEventListener('load', function() {
