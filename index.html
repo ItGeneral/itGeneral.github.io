@@ -439,6 +439,82 @@
                 display: none;
             }
         }
+
+        /* AdSense广告样式 */
+        .ad-container {
+            width: 100%;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 100px;
+        }
+
+        .ad-container-horizontal {
+            max-width: 900px;
+            margin: 32px auto;
+        }
+
+        .ad-container-vertical {
+            width: 100%;
+            max-width: 240px;
+            margin: 20px auto;
+        }
+
+        .ad-placeholder {
+            color: #cbd5e0;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* 工具页面广告 */
+        .tool-ad-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* 工具页面垂直广告容器 */
+        .tool-with-ad {
+            display: flex;
+            gap: 20px;
+            height: 100%;
+            padding: 20px;
+        }
+
+        .tool-iframe-container {
+            flex: 1;
+            height: 100%;
+            min-width: 0;
+        }
+
+        .tool-ad-vertical {
+            width: 240px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 20px;
+        }
+
+        .tool-ad-vertical .ad-container {
+            position: sticky;
+            top: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .tool-ad-vertical {
+                display: none;
+            }
+
+            .tool-with-ad {
+                padding: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -466,6 +542,20 @@
                     <div class="nav-item" data-tool="kanban-board">
                         <span class="nav-icon">📋</span>
                         <span data-i18n="kanbanBoard">看板工具</span>
+                    </div>
+                </div>
+
+                <!-- 侧边栏广告位 -->
+                <div style="padding: 0 12px; margin-top: auto;">
+                    <div class="ad-container ad-container-vertical">
+                        <!-- 替换 data-ad-slot 为您在 AdSense 后台创建的广告单元 ID -->
+                        <ins class="adsbygoogle"
+                             style="display:inline-block;width:240px;height:300px"
+                             data-ad-client="ca-pub-2795550299175923"
+                             data-ad-slot="7770666070"></ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
                     </div>
                 </div>
             </nav>
@@ -514,6 +604,19 @@
                             </div>
                         </div>
 
+                        <!-- In-article Ad 广告位 -->
+                        <div style="margin: 32px 0;">
+                            <ins class="adsbygoogle"
+                                 style="display:block; text-align:center;"
+                                 data-ad-layout="in-article"
+                                 data-ad-format="fluid"
+                                 data-ad-client="ca-pub-2795550299175923"
+                                 data-ad-slot="7930448176"></ins>
+                            <script>
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            </script>
+                        </div>
+
                         <div class="features-section">
                             <h3 data-i18n="featuresTitle">为什么选择我们？</h3>
                             <ul class="features-list">
@@ -533,7 +636,23 @@
 
                 <!-- Tool Panels (IFRAMEs) -->
                 <div id="json-parser" class="tool-panel">
-                    <iframe src="../json-parser/index.html" title="JSON Parser"></iframe>
+                    <div class="tool-with-ad">
+                        <div class="tool-iframe-container">
+                            <iframe src="../json-parser/index.html" title="JSON Parser"></iframe>
+                        </div>
+                        <div class="tool-ad-vertical">
+                            <div class="ad-container ad-container-vertical">
+                                <!-- JSON Parser 垂直广告 -->
+                                <ins class="adsbygoogle"
+                                     style="display:inline-block;width:240px;height:400px"
+                                     data-ad-client="ca-pub-2795550299175923"
+                                     data-ad-slot="1078785127"></ins>
+                                <script>
+                                    (adsbygoogle = window.adsbygoogle || []).push({});
+                                </script>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="kanban-board" class="tool-panel">
                     <iframe src="../kanban-board/index.html" title="Kanban Board"></iframe>
