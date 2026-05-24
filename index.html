@@ -954,6 +954,46 @@
 
         // Setup iframe listeners after DOM is ready
         window.addEventListener('DOMContentLoaded', setupIframeListeners);
+
+        // 移除 app-container 上的 height: auto !important 样式
+        function removeAutoHeight() {
+            const appContainer = document.querySelector('.app-container');
+            if (appContainer) {
+                appContainer.style.removeProperty('height');
+                appContainer.style.setProperty('height', '100vh', 'important');
+            }
+        }
+
+        // 在页面加载后立即执行
+        removeAutoHeight();
+
+        // 使用 MutationObserver 监听样式变化
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                    const target = mutation.target;
+                    if (target.classList.contains('app-container')) {
+                        const height = target.style.getPropertyValue('height');
+                        if (height === 'auto') {
+                            target.style.removeProperty('height');
+                            target.style.setProperty('height', '100vh', 'important');
+                        }
+                    }
+                }
+            });
+        });
+
+        // 监听 app-container 的属性变化
+        const appContainer = document.querySelector('.app-container');
+        if (appContainer) {
+            observer.observe(appContainer, {
+                attributes: true,
+                attributeFilter: ['style']
+            });
+        }
+
+        // 定时检查并修复（作为后备方案）
+        setInterval(removeAutoHeight, 1000);
     </script>
 </body>
 </html>
