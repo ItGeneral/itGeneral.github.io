@@ -1,0 +1,15 @@
+# robots.txt for dailyinai.com
+# This file tells search engine crawlers which pages to access
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow specific directories if any (none currently)
+# Disallow: /private/
+
+# Sitemap location
+Sitemap: https://dailyinai.com/sitemap.xml
+
+# Crawl-delay (optional, specifies delay between requests in seconds)
+# Crawl-delay: 1

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="hidden" data-i18n="app.title">📋 Kanban Board</h1>
+            <div class="header-actions">
+                <button id="addTaskBtn" class="btn btn-primary" data-i18n="button.addTask">➕ Add Task</button>
+                <button id="exportBtn" class="btn btn-secondary" data-i18n="button.export">📤 Export</button>
+            </div>
+        </header>
+
+        <!-- Kanban Board -->
+        <div class="board">
+            <!-- 待办列 -->
+            <div class="column" id="todo-column" data-status="todo">
+                <div class="column-header">
+                    <h2 data-i18n="column.todo">To Do</h2>
+                    <span class="task-count" id="todo-count">0</span>
+                </div>
+                <div class="task-list" id="todo-tasks"></div>
+            </div>
+
+            <!-- 进行中列 -->
+            <div class="column" id="inprogress-column" data-status="inProgress">
+                <div class="column-header">
+                    <h2 data-i18n="column.inProgress">In Progress</h2>
+                    <span class="task-count" id="inprogress-count">0</span>
+                </div>
+                <div class="task-list" id="inprogress-tasks"></div>
+            </div>
+
+            <!-- 已完成列 -->
+            <div class="column" id="done-column" data-status="done">
+                <div class="column-header">
+                    <h2 data-i18n="column.done">Done</h2>
+                    <span class="task-count" id="done-count">0</span>
+                </div>
+                <div class="task-list" id="done-tasks"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 创建/编辑任务模态框 -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <!-- 预览模式头部 -->
+            <div id="previewHeader" class="preview-header" style="display: none;">
+                <h2 id="previewTitle" class="preview-title"></h2>
+                <div class="preview-actions">
+                    <button id="previewEditBtn" class="preview-action-btn" aria-label="编辑">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                        </svg>
+                    </button>
+                    <button class="preview-action-btn close-btn" aria-label="关闭">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 编辑模式头部 -->
+            <div id="editHeader" class="modal-header" style="display: none;">
+                <h2 id="modalTitle" data-i18n="form.addTask">添加任务</h2>
+                <div class="modal-header-actions">
+                    <button type="button" id="editTaskBtn" class="btn btn-primary btn-sm" style="display: none;" data-i18n="button.edit">编辑</button>
+                    <button type="button" id="deleteTaskBtn" class="btn btn-danger btn-sm" style="display: none;" data-i18n="button.delete">删除</button>
+                    <button class="close-icon-btn close-btn" aria-label="关闭" data-i18n-aria="button.close">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 预览模式 -->
+            <div id="taskPreview" style="display: none;">
+                <div class="task-preview-content">
+                    <!-- 优先级和截止日期行 -->
+                    <div class="preview-meta-row">
+                        <div class="meta-badge">
+                            <span class="meta-icon">🎯</span>
+                            <span class="meta-text">优先级</span>
+                            <span id="previewPriority" class="priority-badge"></span>
+                        </div>
+                        <div class="meta-badge" id="previewDueDateContainer">
+                            <span class="meta-icon">📅</span>
+                            <span class="meta-text">截止日期</span>
+                            <span class="meta-value" id="previewDueDate"></span>
+                        </div>
+                    </div>
+
+                    <!-- 描述内容 -->
+                    <div class="preview-description" id="previewDescription"></div>
+                </div>
+            </div>
+
+            <!-- 编辑模式 -->
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                <div class="form-group" id="titleGroup">
+                    <label for="title" data-i18n="form.title">标题<span class="required">*</span></label>
+                    <input type="text" id="title">
+                    <div class="error-message" id="titleError" data-i18n="message.titleRequired">请填写标题内容</div>
+                </div>
+                <div class="form-group">
+                    <label for="description" data-i18n="form.description">描述</label>
+                    <textarea id="description" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dueDate" data-i18n="form.dueDate">截止日期</label>
+                        <div class="date-input-wrapper">
+                            <input type="text" id="dueDate" data-i18n-placeholder="form.selectDate" placeholder="选择日期" readonly>
+                            <button type="button" class="date-picker-btn" id="datePickerBtn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- 自定义日期选择器 -->
+                        <div class="custom-date-picker" id="customDatePicker">
+                            <div class="picker-header">
+                                <button type="button" class="picker-nav prev-month" id="prevMonth">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="15 18 9 12 15 6"></polyline>
+                                    </svg>
+                                </button>
+                                <span class="picker-title" id="pickerTitle">2025年1月</span>
+                                <button type="button" class="picker-nav next-month" id="nextMonth">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="picker-weekdays">
+                                <span data-i18n="datePicker.sun">日</span>
+                                <span data-i18n="datePicker.mon">一</span>
+                                <span data-i18n="datePicker.tue">二</span>
+                                <span data-i18n="datePicker.wed">三</span>
+                                <span data-i18n="datePicker.thu">四</span>
+                                <span data-i18n="datePicker.fri">五</span>
+                                <span data-i18n="datePicker.sat">六</span>
+                            </div>
+                            <div class="picker-days" id="pickerDays"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="priority" data-i18n="form.priority">优先级</label>
+                        <select id="priority">
+                            <option value="low" data-i18n="priority.low">低</option>
+                            <option value="medium" selected data-i18n="priority.medium">中</option>
+                            <option value="high" data-i18n="priority.high">高</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tags" data-i18n="form.tags">标签（用逗号分隔）</label>
+                    <input type="text" id="tags" data-i18n-placeholder="form.tagsPlaceholder" placeholder="前端, 设计">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" data-i18n="button.save">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 提示消息容器 -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

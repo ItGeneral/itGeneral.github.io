@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 开发者工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            line-height: 1.6;
+            color: #2d3748;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 24px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 48px 32px;
+            color: white;
+            text-align: center;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 18px;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            font-size: 28px;
+            color: #1a202c;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .section h3 {
+            font-size: 20px;
+            color: #2d3748;
+            margin: 24px 0 12px 0;
+        }
+
+        .section p {
+            margin-bottom: 16px;
+            line-height: 1.8;
+            color: #4a5568;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .feature-card {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 24px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            color: #1a202c;
+            margin: 0 0 8px 0;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: #718096;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .tools-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .tool-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: #f7fafc;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .tool-item:hover {
+            background: #edf2f7;
+        }
+
+        .tool-icon {
+            font-size: 24px;
+        }
+
+        .tool-item strong {
+            color: #2d3748;
+            font-size: 16px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+
+            .hero {
+                padding: 32px 24px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .section {
+                padding: 24px;
+            }
+
+            .section h2 {
+                font-size: 24px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link" data-i18n="backToTools">← 返回工具集</a>
+
+        <div class="hero">
+            <h1 data-i18n="title">开发者工具</h1>
+            <p data-i18n="subtitle">为开发者打造的高效、免费的在线工具集</p>
+        </div>
+
+        <div class="section">
+            <h2 data-i18n="aboutTitle">关于我们</h2>
+            <p data-i18n="aboutText1">开发者工具（dailyinai.com）是一个专为开发者和创作者设计的免费在线工具平台。我们的使命是提供简单、高效、实用的工具，帮助您在日常工作中提高生产力。</p>
+            <p data-i18n="aboutText2">无论是数据处理、项目管理还是日常开发任务，我们都致力于为您提供最佳的解决方案。所有工具都在浏览器中运行，无需安装，保护您的数据隐私。</p>
+        </div>
+
+        <div class="section">
+            <h2 data-i18n="featuresTitle">核心特性</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3 data-i18n="feature1Title">高效快捷</h3>
+                    <p data-i18n="feature1Desc">即时响应，无需等待，所有工具都在浏览器中运行</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 data-i18n="feature2Title">隐私保护</h3>
+                    <p data-i18n="feature2Desc">数据本地处理，不上传服务器，保护您的信息安全</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3 data-i18n="feature3Title">双语支持</h3>
+                    <p data-i18n="feature3Desc">完整的中英文界面，服务全球用户</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 data-i18n="feature4Title">响应式设计</h3>
+                    <p data-i18n="feature4Desc">完美适配桌面和移动设备，随时随地使用</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 data-i18n="toolsTitle">我们的工具</h2>
+            <p data-i18n="toolsDesc">我们持续开发和添加新的实用工具：</p>
+            <div class="tools-list">
+                <div class="tool-item">
+                    <span class="tool-icon">📝</span>
+                    <strong data-i18n="jsonParser">JSON 解析器</strong>
+                </div>
+                <div class="tool-item">
+                    <span class="tool-icon">📋</span>
+                    <strong data-i18n="kanbanBoard">看板工具</strong>
+                </div>
+            </div>
+            <p style="margin-top: 20px; color: #718096; font-size: 14px;" data-i18n="moreComing">更多工具正在开发中...</p>
+        </div>
+
+        <div class="section">
+            <h2 data-i18n="philosophyTitle">我们的理念</h2>
+            <p data-i18n="philosophyText">我们相信，好的工具应该是简单、直观且免费的。我们致力于：</p>
+            <ul style="margin-left: 24px; color: #4a5568;">
+                <li data-i18n="philosophy1" style="margin-bottom: 8px;">保持工具的简洁和易用性</li>
+                <li data-i18n="philosophy2" style="margin-bottom: 8px;">不断改进和优化用户体验</li>
+                <li data-i18n="philosophy3" style="margin-bottom: 8px;">倾听用户反馈，快速响应需求</li>
+                <li data-i18n="philosophy4" style="margin-bottom: 8px;">保护用户隐私，数据安全第一</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 data-i18n="contactTitle">联系我们</h2>
+            <p data-i18n="contactText">如果您有任何问题、建议或反馈，我们随时欢迎您的声音：</p>
+            <p data-i18n="contactInfo">• 网站：dailyinai.com<br>• 邮箱：songjiuhua91@gmail.com<br>• 通过 dailyinai.com 联系我们</p>
+            <a href="index.html" class="cta-button" data-i18n="startUsing">开始使用工具 →</a>
+        </div>
+    </div>
+
+    <script>
+        // Language system
+        const translations = {
+            zh: {
+                title: '开发者工具',
+                subtitle: '为开发者打造的高效、免费的在线工具集',
+                aboutTitle: '关于我们',
+                aboutText1: '开发者工具（dailyinai.com）是一个专为开发者和创作者设计的免费在线工具平台。我们的使命是提供简单、高效、实用的工具，帮助您在日常工作中提高生产力。',
+                aboutText2: '无论是数据处理、项目管理还是日常开发任务，我们都致力于为您提供最佳的解决方案。所有工具都在浏览器中运行，无需安装，保护您的数据隐私。',
+                featuresTitle: '核心特性',
+                feature1Title: '高效快捷',
+                feature1Desc: '即时响应，无需等待，所有工具都在浏览器中运行',
+                feature2Title: '隐私保护',
+                feature2Desc: '数据本地处理，不上传服务器，保护您的信息安全',
+                feature3Title: '双语支持',
+                feature3Desc: '完整的中英文界面，服务全球用户',
+                feature4Title: '响应式设计',
+                feature4Desc: '完美适配桌面和移动设备，随时随地使用',
+                toolsTitle: '我们的工具',
+                toolsDesc: '我们持续开发和添加新的实用工具：',
+                jsonParser: 'JSON 解析器',
+                kanbanBoard: '看板工具',
+                moreComing: '更多工具正在开发中...',
+                philosophyTitle: '我们的理念',
+                philosophyText: '我们相信，好的工具应该是简单、直观且免费的。我们致力于：',
+                philosophy1: '保持工具的简洁和易用性',
+                philosophy2: '不断改进和优化用户体验',
+                philosophy3: '倾听用户反馈，快速响应需求',
+                philosophy4: '保护用户隐私，数据安全第一',
+                contactTitle: '联系我们',
+                contactText: '如果您有任何问题、建议或反馈，我们随时欢迎您的声音：',
+                contactInfo: '• 网站：dailyinai.com<br>• 邮箱：songjiuhua91@gmail.com<br>• 通过 dailyinai.com 联系我们',
+                startUsing: '开始使用工具 →',
+                backToTools: '← 返回工具集'
+            },
+            en: {
+                title: 'Developer Tools',
+                subtitle: 'Efficient, free online tools built for developers',
+                aboutTitle: 'About Us',
+                aboutText1: 'Developer Tools (dailyinai.com) is a free online tool platform designed specifically for developers and creators. Our mission is to provide simple, efficient, and practical tools to help you boost productivity in your daily work.',
+                aboutText2: 'Whether it\'s data processing, project management, or daily development tasks, we are committed to providing you with the best solutions. All tools run in the browser, requiring no installation, and protect your data privacy.',
+                featuresTitle: 'Core Features',
+                feature1Title: 'Fast & Efficient',
+                feature1Desc: 'Instant response, no waiting, all tools run in your browser',
+                feature2Title: 'Privacy First',
+                feature2Desc: 'Local data processing, no server uploads, protect your information',
+                feature3Title: 'Bilingual Support',
+                feature3Desc: 'Complete Chinese and English interface, serving global users',
+                feature4Title: 'Responsive Design',
+                feature4Desc: 'Perfect for desktop and mobile devices, use anywhere anytime',
+                toolsTitle: 'Our Tools',
+                toolsDesc: 'We continuously develop and add new practical tools:',
+                jsonParser: 'JSON Parser',
+                kanbanBoard: 'Kanban Board',
+                moreComing: 'More tools coming soon...',
+                philosophyTitle: 'Our Philosophy',
+                philosophyText: 'We believe good tools should be simple, intuitive, and free. We are committed to:',
+                philosophy1: 'Keeping tools simple and easy to use',
+                philosophy2: 'Continuously improving and optimizing user experience',
+                philosophy3: 'Listening to user feedback and responding quickly to needs',
+                philosophy4: 'Protecting user privacy, data security first',
+                contactTitle: 'Contact Us',
+                contactText: 'If you have any questions, suggestions, or feedback, we\'d love to hear from you:',
+                contactInfo: '• Website: dailyinai.com<br>• Email: songjiuhua91@gmail.com<br>• Contact us through dailyinai.com',
+                startUsing: 'Start Using Tools →',
+                backToTools: '← Back to Tools'
+            }
+        };
+
+        // Get language from localStorage or default to Chinese
+        let currentLang = localStorage.getItem('language') || 'zh';
+
+        // Initialize language on page load
+        function initLanguage() {
+            // Set HTML lang attribute
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+
+            // Update all elements with data-i18n attribute
+            for (const element of document.querySelectorAll('[data-i18n]')) {
+                const key = element.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    element.innerHTML = translations[currentLang][key]; // Use innerHTML to allow <br> tags
+                }
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', initLanguage);
+    </script>
+</body>
+</html>
