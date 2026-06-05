@@ -1,6 +1,14 @@
 <template>
   <div class="legal-page">
     <div class="legal-container">
+      <!-- 返回主页按钮 -->
+      <router-link to="/" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5a.5.5 0 0 0 0-1z"/>
+        </svg>
+        <span>{{ locale === 'zh' ? '返回主页' : 'Back to Home' }}</span>
+      </router-link>
+
       <h1>{{ pageData?.title || '404' }}</h1>
       <div v-if="pageData" class="legal-content" v-html="pageData.html"></div>
       <div v-else class="legal-content">
@@ -39,6 +47,29 @@ const pageData = computed(() => {
   margin: 0 auto;
   padding: 60px 24px;
   flex: 1;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  color: #6b7280;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  margin-bottom: 24px;
+}
+
+.back-link:hover {
+  background: #f3f4f6;
+  color: #10a37f;
+}
+
+.back-link svg {
+  flex-shrink: 0;
 }
 
 .legal-container h1 {
