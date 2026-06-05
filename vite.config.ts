@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
-  base: '/ai-tools/', // 你的 GitHub 仓库名称
+  base: '/', // 用户主页仓库使用根路径
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
