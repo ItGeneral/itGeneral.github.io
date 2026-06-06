@@ -1,6 +1,6 @@
 <template>
   <div class="ai-chat">
-    <!-- 左侧聊天区 -->
+    <!-- 聊天区 -->
     <div
       class="chat-main"
       @dragover.prevent="onDragOver"
@@ -144,55 +144,6 @@
       </div>
     </div>
 
-    <!-- 右侧对话列表 -->
-    <div class="chat-sidebar">
-      <button class="new-chat-btn" @click="createNew">
-        <span class="plus">+</span>
-        {{ t('ai.newChat') }}
-      </button>
-
-      <div class="conv-list">
-        <div
-          v-for="conv in state.conversations"
-          :key="conv.id"
-          :class="['conv-item', { active: conv.id === state.currentId }]"
-          @click="switchTo(conv.id)"
-        >
-          <div class="conv-info">
-            <input
-              v-if="renamingId === conv.id"
-              class="conv-rename-input"
-              v-model="renamingTitle"
-              @keydown.enter="finishRename"
-              @keydown.escape="cancelRename"
-              @blur="finishRename"
-              @click.stop
-              autofocus
-            />
-            <div v-else class="conv-title" @dblclick.stop="startRename(conv)" :title="t('ai.dblClickRename')">
-              {{ conv.title }}
-            </div>
-            <div class="conv-time">{{ formatConvTime(conv.updatedAt) }}</div>
-          </div>
-          <button
-            v-if="renamingId !== conv.id"
-            class="conv-rename-btn"
-            @click.stop="startRename(conv)"
-            :title="t('ai.rename')"
-          >✎</button>
-          <button
-            v-if="renamingId !== conv.id"
-            class="conv-delete"
-            @click.stop="deleteConv(conv.id)"
-            :title="t('ai.delete')"
-          >×</button>
-        </div>
-        <div v-if="state.conversations.length === 0" class="conv-empty">
-          {{ t('ai.noConversations') }}
-        </div>
-      </div>
-    </div>
-
     <!-- AI 设置弹窗 -->
     <AISettingsDialog :visible="showAISettings" @close="showAISettings = false" />
   </div>
@@ -254,37 +205,6 @@ const createNew = () => {
   chatStore.createConversation()
   input.value = ''
   scrollToBottom(true)
-}
-
-const switchTo = (id: string) => {
-  chatStore.switchTo(id)
-  scrollToBottom(true)
-}
-
-const deleteConv = (id: string) => {
-  if (confirm(t('ai.confirmDelete'))) {
-    chatStore.deleteConversation(id)
-  }
-}
-
-// 重命名
-const renamingId = ref<string | null>(null)
-const renamingTitle = ref('')
-
-const startRename = (conv: { id: string; title: string }) => {
-  renamingId.value = conv.id
-  renamingTitle.value = conv.title
-}
-
-const finishRename = () => {
-  if (renamingId.value) {
-    chatStore.renameConversation(renamingId.value, renamingTitle.value)
-    renamingId.value = null
-  }
-}
-
-const cancelRename = () => {
-  renamingId.value = null
 }
 
 // 复制消息
@@ -526,169 +446,19 @@ const send = async () => {
 <style scoped>
 .ai-chat {
   display: flex;
-  height: calc(100vh - 60px);
+  height: 100%;
   background: #ffffff;
 }
 
-/* ── 右侧对话列表 ── */
-.chat-sidebar {
-  width: 220px;
-  background: #f7f7f8;
-  border-left: 1px solid #e5e5e5;
-  border-right: none;
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-}
-
-.new-chat-btn {
-  margin: 16px;
-  padding: 10px 16px;
-  background: #fff;
-  border: 1px solid #e5e5e5;
-  border-radius: 8px;
-  color: #374151;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s;
-}
-
-.new-chat-btn:hover {
-  background: #f3f4f6;
-  border-color: #d1d5db;
-}
-
-.plus {
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 1;
-}
-
-.conv-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0 8px 8px;
-}
-
-.conv-list::-webkit-scrollbar {
-  width: 4px;
-}
-
-.conv-list::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 2px;
-}
-
-.conv-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
-  margin-bottom: 2px;
-}
-
-.conv-item:hover {
-  background: #ebedf0;
-}
-
-.conv-item.active {
-  background: #e5e7eb;
-}
-
-.conv-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.conv-title {
-  font-size: 13px;
-  color: #374151;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.conv-time {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-top: 2px;
-}
-
-.conv-delete {
-  background: none;
-  border: none;
-  color: #999;
-  cursor: pointer;
-  padding: 3px 6px;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: all 0.2s ease;
-  opacity: 0;
-}
-
-.conv-item:hover .conv-delete,
-.conv-item:hover .conv-rename-btn {
-  opacity: 1;
-}
-
-.conv-delete:hover {
-  background: rgba(220, 38, 38, 0.1);
-  color: #dc2626;
-}
-
-.conv-rename-btn {
-  background: none;
-  border: none;
-  color: #999;
-  cursor: pointer;
-  padding: 3px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  transition: all 0.2s ease;
-  opacity: 0;
-}
-
-.conv-rename-btn:hover {
-  background: rgba(0, 0, 0, 0.06);
-  color: #666;
-}
-
-.conv-rename-input {
-  width: 100%;
-  padding: 2px 6px;
-  border: 1px solid #10a37f;
-  border-radius: 4px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #374151;
-  outline: none;
-  background: #fff;
-  box-sizing: border-box;
-}
-
-.conv-empty {
-  padding: 20px;
-  text-align: center;
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-/* ── 右侧聊天区 ── */
+/* ── 聊天区 ── */
 .chat-main {
   flex: 1;
   display: flex;
   flex-direction: column;
   min-width: 0;
   position: relative;
+  height: 100%;
+  overflow: hidden;
 }
 
 .chat-main.drag-active::after {

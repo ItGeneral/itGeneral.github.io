@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import AppSidebar from './components/layout/AppSidebar.vue'
+import AppLeftSidebar from './components/layout/AppLeftSidebar.vue'
+import AppTopNav from './components/layout/AppTopNav.vue'
 import AppHeader from './components/layout/AppHeader.vue'
 import AppFooter from './components/layout/AppFooter.vue'
 
 const route = useRoute()
 const currentTheme = ref<'light' | 'dark'>('light')
-const sidebarCollapsed = ref(false)
 
 const isLegalPage = computed(() => route.name === 'legal')
+
+// 判断是否显示左侧边栏（AI Chat 或 Markdown Editor）
+const showLeftSidebar = computed(() => {
+  return route.path === '/ai-chat' || route.path === '/markdown-editor'
+})
 </script>
 
 <template>
@@ -18,17 +23,21 @@ const isLegalPage = computed(() => route.name === 'legal')
       <router-view />
     </template>
     <template v-else>
-      <AppSidebar :collapsed="sidebarCollapsed" @toggle="sidebarCollapsed = !sidebarCollapsed" />
       <div class="app-main">
-        <AppHeader />
-        <div class="app-content">
-          <router-view v-slot="{ Component }">
-            <keep-alive>
-              <component :is="Component" />
-            </keep-alive>
-          </router-view>
+        <AppTopNav />
+        <div class="app-body">
+          <AppLeftSidebar v-if="showLeftSidebar" />
+          <div class="app-content-wrapper">
+            <div class="app-content">
+              <router-view v-slot="{ Component }">
+                <keep-alive>
+                  <component :is="Component" />
+                </keep-alive>
+              </router-view>
+            </div>
+            <AppFooter />
+          </div>
         </div>
-        <AppFooter />
       </div>
     </template>
   </div>
@@ -61,12 +70,26 @@ body:has(.legal-page) {
 
 .app-root {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   background: var(--bg-primary, #ffffff);
   color: var(--text-primary, #24292e);
 }
 
 .app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.app-content-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
