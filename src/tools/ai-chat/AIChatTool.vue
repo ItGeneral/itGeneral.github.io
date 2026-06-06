@@ -12,9 +12,8 @@
       <!-- 顶部标题栏 -->
       <div class="chat-header">
         <div class="chat-header-left">
-          <div class="ai-avatar">🤖</div>
           <div>
-            <div class="chat-title">AI Assistant</div>
+            <div class="chat-title">{{ t('tool.aichat.name') }}</div>
             <div class="chat-subtitle">{{ currentConv?.title || t('ai.chatHint') }}</div>
           </div>
         </div>
@@ -22,6 +21,10 @@
           <button class="header-btn" @click="showAISettings = true" :title="t('ai.settingsTitle')">
             <span class="btn-icon">⚙</span>
             <span class="btn-text">{{ t('ai.settingsTitle') }}</span>
+          </button>
+          <button class="header-btn" @click="openHelp" :title="t('common.help')">
+            <span class="btn-icon">📖</span>
+            <span class="btn-text">{{ t('common.help') }}</span>
           </button>
         </div>
       </div>
@@ -104,7 +107,7 @@
             <textarea
               v-model="input"
               class="chat-input"
-              :placeholder="t('ai.inputPlaceholder')"
+              :placeholder="t('ai.inputHint')"
               rows="1"
               ref="inputRef"
               @keydown.enter.exact.prevent="send"
@@ -118,7 +121,7 @@
                 style="display:none"
                 multiple
               />
-              <button class="input-action-btn" @click="fileInputRef?.click()" title="上传文件">
+              <button class="input-action-btn" @click="fileInputRef?.click()" :title="t('ai.uploadFile')">
                 <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor">
                   <path d="M7.5 1a.75.75 0 0 1 .75.75v5.5h5.5a.75.75 0 0 1 0 1.5h-5.5v5.5a.75.75 0 0 1-1.5 0v-5.5h-5.5a.75.75 0 0 1 0-1.5h5.5v-5.5A.75.75 0 0 1 7.5 1Z"/>
                 </svg>
@@ -136,11 +139,6 @@
             </svg>
           </button>
         </div>
-
-        <div class="composer-footer">
-          <span class="footer-hint">Enter 发送 · Shift+Enter 换行</span>
-          <span class="model-tag" v-if="config.model">{{ config.model }}</span>
-        </div>
       </div>
     </div>
 
@@ -156,13 +154,44 @@ import { useI18n } from '../../i18n'
 import { chat, isAIConfigured, getAIConfig, type AIMessage } from '../../services/ai'
 import { chatStore } from '../../store/chatStore'
 import AISettingsDialog from '../../components/AISettingsDialog.vue'
+import { useRouter } from 'vue-router'
+import { useToolKnowledge } from '../../composables/useToolKnowledge'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const router = useRouter()
+
+// 工具知识库
+const { allKnowledge, buildSystemPrompt, isToolRelatedQuestion } = useToolKnowledge()
+
+// Help
+const openHelp = () => {
+  router.push('/help/ai-chat')
+}
 
 // Configure marked for chat
 marked.setOptions({
   breaks: true,
   gfm: true,
+})
+
+// Update CSS variable for i18n
+const updateI18nStyle = () => {
+  const root = document.documentElement
+  root.style.setProperty('--drag-drop-text', `"${t('ai.dragDropFile')}"`)
+}
+
+// Watch locale changes
+watch(locale, () => {
+  updateI18nStyle()
+})
+
+// Initialize on mount
+onMounted(() => {
+  updateI18nStyle()
+  if (state.conversations.length === 0) {
+    chatStore.createConversation()
+  }
+  scrollToBottom()
 })
 
 const state = chatStore.state
@@ -176,20 +205,12 @@ const inputRef = ref<HTMLTextAreaElement | null>(null)
 const config = getAIConfig()
 const showAISettings = ref(false)
 
-const suggestions = [
-  '💡 解释什么是闭包，并给出一个例子',
-  '📝 帮我写一个正则表达式匹配邮箱',
-  '🔄 JSON 和 YAML 有什么区别？',
-  '🐛 我的代码有 bug，帮我分析',
-]
-
-// 初始化：如果没有对话，创建一个
-onMounted(() => {
-  if (state.conversations.length === 0) {
-    chatStore.createConversation()
-  }
-  scrollToBottom()
-})
+const suggestions = computed(() => [
+  t('ai.suggestion.jsonTool'),
+  t('ai.suggestion.regexTool'),
+  t('ai.suggestion.dedupTool'),
+  t('ai.suggestion.markdownTool'),
+])
 
 // keep-alive 激活时滚动到底部
 onActivated(() => {
@@ -226,7 +247,7 @@ const handleFileSelect = async (e: Event) => {
 
   for (const file of Array.from(files)) {
     if (file.size > 100 * 1024) {
-      const ok = confirm(`文件 "${file.name}" 大于 100KB，确定要添加吗？大文件可能超出上下文限制。`)
+      const ok = confirm(t('ai.fileTooLarge', { name: file.name }))
       if (!ok) continue
     }
 
@@ -286,7 +307,7 @@ const onDrop = async (e: DragEvent) => {
 
   for (const file of Array.from(files)) {
     if (file.size > 100 * 1024) {
-      const ok = confirm(`文件 "${file.name}" 大于 100KB，确定要添加吗？大文件可能超出上下文限制。`)
+      const ok = confirm(t('ai.fileTooLarge', { name: file.name }))
       if (!ok) continue
     }
     try {
@@ -327,23 +348,25 @@ const useSuggestion = (text: string) => {
 }
 
 const formatTime = (ts: number): string => {
-  return new Date(ts).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+  return new Date(ts).toLocaleTimeString(locale.value === 'zh' ? 'zh-CN' : 'en-US', { hour: '2-digit', minute: '2-digit' })
 }
 
 const formatConvTime = (ts: number): string => {
   const now = Date.now()
   const diff = now - ts
-  if (diff < 60000) return '刚刚'
-  if (diff < 3600000) return Math.floor(diff / 60000) + ' 分钟前'
-  if (diff < 86400000) return Math.floor(diff / 3600000) + ' 小时前'
-  if (diff < 604800000) return Math.floor(diff / 86400000) + ' 天前'
-  return new Date(ts).toLocaleDateString('zh-CN')
+  if (diff < 60000) return t('date.justNow')
+  if (diff < 3600000) return t('date.minutesAgo', { n: Math.floor(diff / 60000) })
+  if (diff < 86400000) return t('date.hoursAgo', { n: Math.floor(diff / 3600000) })
+  if (diff < 604800000) return t('date.daysAgo', { n: Math.floor(diff / 86400000) })
+  return new Date(ts).toLocaleDateString(locale.value === 'zh' ? 'zh-CN' : 'en-US')
 }
 
 const renderMarkdown = (text: string): string => {
   try {
-    return marked.parse(text) as string
-  } catch {
+    const html = marked.parse(text) as string
+    return html
+  } catch (e) {
+    console.error('Markdown parse error:', e)
     return text
   }
 }
@@ -427,8 +450,15 @@ const send = async () => {
   loading.value = true
   try {
     const conv = chatStore.getCurrentConversation()
+
+    // 检测是否是工具相关问题，如果是则使用知识库
+    let systemPrompt = 'You are a helpful assistant. Be concise and clear. Use markdown formatting when appropriate.'
+    if (isToolRelatedQuestion(text)) {
+      systemPrompt = buildSystemPrompt(text)
+    }
+
     const chatMessages: AIMessage[] = [
-      { role: 'system', content: 'You are a helpful assistant. Be concise and clear. Use markdown formatting when appropriate.' },
+      { role: 'system', content: systemPrompt },
       ...(conv?.messages.map(m => ({ role: m.role, content: m.content } as AIMessage)) || []),
     ]
 
@@ -462,7 +492,7 @@ const send = async () => {
 }
 
 .chat-main.drag-active::after {
-  content: '📎 拖放文件到此处';
+  content: var(--drag-drop-text, '📎 拖放文件到此处');
   position: absolute;
   inset: 0;
   background: rgba(16, 163, 127, 0.08);
@@ -742,21 +772,27 @@ const send = async () => {
   overflow-x: auto;
   margin: 8px 0;
   font-size: 13px;
-  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  font-family: 'SF Mono', Monaco, Consolas, 'Courier New', monospace;
+  line-height: 1.5;
+  white-space: pre;
+  word-wrap: normal;
 }
 
 .bubble-text :deep(code) {
   background: rgba(0, 0, 0, 0.06);
   padding: 2px 5px;
   border-radius: 3px;
-  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  font-family: 'SF Mono', Monaco, Consolas, 'Courier New', monospace;
   font-size: 13px;
+  color: #e11d48;
 }
 
 .bubble-text :deep(pre code) {
   background: none;
   padding: 0;
-  color: inherit;
+  color: #cdd6f4;
+  display: block;
+  overflow-x: auto;
 }
 
 .bubble-text :deep(strong) {
@@ -874,7 +910,7 @@ const send = async () => {
 .chat-input-area {
   background: #fff;
   border-top: 1px solid #e5e5e5;
-  padding: 16px 24px 24px;
+  padding: 12px 24px 16px;
   flex-shrink: 0;
 }
 
@@ -1048,27 +1084,6 @@ const send = async () => {
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
-}
-
-.composer-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 6px;
-}
-
-.footer-hint {
-  font-size: 11px;
-  color: #9ca3af;
-}
-
-.model-tag {
-  font-size: 11px;
-  color: #6b7280;
-  background: #f3f4f6;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-family: monospace;
 }
 
 /* ── 响应式 ── */

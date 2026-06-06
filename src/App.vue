@@ -35,9 +35,9 @@ const showLeftSidebar = computed(() => {
                 </keep-alive>
               </router-view>
             </div>
-            <AppFooter />
           </div>
         </div>
+        <AppFooter />
       </div>
     </template>
   </div>
@@ -87,6 +87,7 @@ body:has(.legal-page) {
   flex: 1;
   display: flex;
   overflow: hidden;
+  min-height: 0;
 }
 
 .app-content-wrapper {
@@ -94,6 +95,7 @@ body:has(.legal-page) {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  min-height: 0;
 }
 
 .app-content {

@@ -5,7 +5,7 @@ import { docStore } from '../../store/docStore'
 import { chatStore } from '../../store/chatStore'
 import { useI18n } from '../../i18n'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const route = useRoute()
 const router = useRouter()
@@ -122,7 +122,7 @@ const formatConvTime = (ts: number): string => {
   if (diff < 3600000) return t('date.minutesAgo', { n: Math.floor(diff / 60000) })
   if (diff < 86400000) return t('date.hoursAgo', { n: Math.floor(diff / 3600000) })
   if (diff < 604800000) return t('date.daysAgo', { n: Math.floor(diff / 86400000) })
-  return new Date(ts).toLocaleDateString()
+  return new Date(ts).toLocaleDateString(locale.value === 'zh' ? 'zh-CN' : 'en-US')
 }
 
 const formatDocTime = (ts: number): string => {
@@ -131,11 +131,12 @@ const formatDocTime = (ts: number): string => {
   const diff = now.getTime() - d.getTime()
   if (diff < 60000) return t('date.justNow')
   if (diff < 3600000) return t('date.minutesAgo', { n: Math.floor(diff / 60000) })
+  if (diff < 86400000) return t('date.hoursAgo', { n: Math.floor(diff / 3600000) })
   if (d.toDateString() === now.toDateString()) return `${t('date.today')} ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`
   const yesterday = new Date(now)
   yesterday.setDate(yesterday.getDate() - 1)
   if (d.toDateString() === yesterday.toDateString()) return t('date.yesterday')
-  return t('date.daysAgo', { n: d.getMonth() + 1 })
+  return d.toLocaleDateString(locale.value === 'zh' ? 'zh-CN' : 'en-US')
 }
 
 onMounted(async () => {
@@ -232,7 +233,7 @@ onMounted(async () => {
           </div>
         </div>
         <div v-if="documents.length === 0" class="empty-state">
-          暂无文档
+          {{ t('doc.emptyDocs') }}
         </div>
       </div>
     </div>

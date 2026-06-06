@@ -27,8 +27,11 @@ const { t } = useI18n()
 .app-footer {
   background: #fff;
   border-top: 1px solid #e5e5e5;
-  padding: 12px 16px;
+  padding: 8px 16px;
   flex-shrink: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
 }
 
 .footer-inner {
@@ -37,23 +40,24 @@ const { t } = useI18n()
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: 12px;
+  width: 100%;
 }
 
 .footer-links {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
 .footer-links a {
   color: #6b7280;
-  font-size: 13px;
+  font-size: 12px;
   text-decoration: none;
   transition: color 0.2s;
-  padding: 4px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
   white-space: nowrap;
 }
@@ -65,34 +69,35 @@ const { t } = useI18n()
 
 .divider {
   color: #d1d5db;
-  font-size: 14px;
+  font-size: 12px;
   user-select: none;
 }
 
 .footer-copy {
-  font-size: 12px;
+  font-size: 11px;
   color: #9ca3af;
   white-space: nowrap;
 }
 
 @media (max-width: 640px) {
   .app-footer {
-    padding: 16px 12px;
+    padding: 6px 12px;
+    height: auto;
   }
 
   .footer-inner {
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     text-align: center;
   }
 
   .footer-links {
-    gap: 6px;
+    gap: 4px;
   }
 
   .footer-links a {
-    font-size: 12px;
-    padding: 3px 6px;
+    font-size: 11px;
+    padding: 2px 4px;
   }
 }
 </style>

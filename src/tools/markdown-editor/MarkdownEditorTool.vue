@@ -33,8 +33,15 @@ import { Exporter } from './components/Toolbar/Exporter'
 import { eventBus } from './components/Common/EventBus'
 import { docStore, DEFAULT_DOC_CONTENT } from '../../store/docStore'
 import { useI18n } from '../../i18n'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
+const router = useRouter()
+
+// Help
+const onHelpRequested = () => {
+  router.push('/help/markdown-editor')
+}
 
 const content = ref(DEFAULT_DOC_CONTENT)
 const currentTheme = ref<'light' | 'dark'>('light')
@@ -92,11 +99,13 @@ onMounted(async () => {
 
   initialized = true
   eventBus.on('export-requested', onExportRequested)
+  eventBus.on('help-requested', onHelpRequested)
 })
 
 onUnmounted(() => {
   if (saveTimer) clearTimeout(saveTimer)
   eventBus.off('export-requested', onExportRequested)
+  eventBus.off('help-requested', onHelpRequested)
 })
 
 const handleInsert = (text: string) => {

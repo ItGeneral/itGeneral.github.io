@@ -227,7 +227,9 @@ function generateGoStruct(obj: unknown, structName: string, structs: string[]): 
   const fields = entries.map(([key, val]) => {
     const type = goType(val, capitalize(camelCase(key)), structs)
     const fieldName = capitalize(camelCase(key))
-    return `\t${fieldName} ${type} \`json:"${key}"\``
+    // 确保字段名首字母大写（Go 的导出字段要求）
+    const goFieldName = fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
+    return `\t${goFieldName} ${type} \`json:"${key}"\``
   })
   const structStr = `type ${structName} struct {\n${fields.join('\n')}\n}`
   structs.push(structStr)

@@ -162,40 +162,31 @@ const tooltipStyle = computed(() => ({ top: '0px', left: '0px' }))
 .lang-btn {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border: 1px solid #d0d7de;
-  border-radius: 8px;
-  background: #ffffff;
+  gap: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
   color: #57606a;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
 .lang-btn:hover {
-  background: #f6f8fa;
-  border-color: #0969da;
+  background: rgba(9, 105, 218, 0.08);
   color: #0969da;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-}
-
-.lang-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .lang-icon {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1;
 }
 
 .lang-label {
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Tooltip */

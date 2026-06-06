@@ -5,6 +5,12 @@ export interface I18nMessages {
 }
 
 const zh: I18nMessages = {
+  // Common
+  'common.help': '帮助',
+  'common.userGuide': '使用指南',
+  'common.back': '返回',
+  'common.loading': '加载中...',
+
   // App
   'app.title': 'AI Tools',
 
@@ -27,6 +33,7 @@ const zh: I18nMessages = {
   // Doc dates
   'date.justNow': '刚刚',
   'date.minutesAgo': '{n}分钟前',
+  'date.hoursAgo': '{n}小时前',
   'date.today': '今天',
   'date.yesterday': '昨天',
   'date.daysAgo': '{n}天前',
@@ -141,14 +148,17 @@ const zh: I18nMessages = {
   // Doc store
   'doc.untitled': '未命名文档',
   'doc.welcome': '欢迎文档',
+  'doc.emptyDocs': '暂无文档',
 
   // Tool names and descriptions
   'tool.json.name': 'JSON 转换器',
   'tool.json.desc': 'JSON 格式化、压缩，转 YAML/XML/CSV/TypeScript/Java/Go',
   'tool.regex.name': '正则表达式测试器',
   'tool.regex.desc': '正则表达式实时匹配、捕获组、常用正则',
-  'tool.dedup.name': '文本去重工具',
+  'tool.dedup.name': '文本去重',
   'tool.dedup.desc': '文本行去重，支持自定义分隔符、排序',
+  'tool.markdown.name': 'Markdown 编辑器',
+  'tool.markdown.desc': 'Markdown 在线编辑与实时预览',
 
   // Markdown Editor stats
   'md.words': '字数',
@@ -184,6 +194,7 @@ const zh: I18nMessages = {
   'ai.chatEmpty': '开始对话',
   'ai.chatHint': '输入消息，按 Enter 发送',
   'ai.inputPlaceholder': '输入消息...',
+  'ai.inputHint': 'Enter 发送 · Shift+Enter 换行',
   'ai.clear': '清空对话',
   'ai.newChat': '新建对话',
   'ai.delete': '删除',
@@ -193,6 +204,15 @@ const zh: I18nMessages = {
   'ai.confirmClear': '确定清空当前对话的消息吗？',
   'ai.confirmDelete': '确定删除这个对话吗？',
   'ai.noConversations': '暂无对话',
+  'ai.uploadFile': '上传文件',
+  'ai.dragDropFile': '拖放文件到此处',
+  'ai.fileTooLarge': '文件 "{name}" 大于 100KB，确定要添加吗？大文件可能超出上下文限制。',
+
+  // AI suggestions
+  'ai.suggestion.jsonTool': '🔧 JSON转换器怎么用？',
+  'ai.suggestion.regexTool': '🔍 如何使用正则表达式测试器？',
+  'ai.suggestion.dedupTool': '📋 文本去重工具有什么功能？',
+  'ai.suggestion.markdownTool': '📝 Markdown编辑器的使用方法',
 
   // AI Chat tool
   'tool.aichat.name': 'AI 助手',
@@ -207,6 +227,12 @@ const zh: I18nMessages = {
 }
 
 const en: I18nMessages = {
+  // Common
+  'common.help': 'Help',
+  'common.userGuide': 'User Guide',
+  'common.back': 'Back',
+  'common.loading': 'Loading...',
+
   // App
   'app.title': 'AI Tools',
 
@@ -229,6 +255,7 @@ const en: I18nMessages = {
   // Doc dates
   'date.justNow': 'just now',
   'date.minutesAgo': '{n}m ago',
+  'date.hoursAgo': '{n}h ago',
   'date.today': 'Today',
   'date.yesterday': 'Yesterday',
   'date.daysAgo': '{n}d ago',
@@ -343,14 +370,17 @@ const en: I18nMessages = {
   // Doc store
   'doc.untitled': 'Untitled',
   'doc.welcome': 'Welcome',
+  'doc.emptyDocs': 'No documents',
 
   // Tool names and descriptions
   'tool.json.name': 'JSON Converter',
   'tool.json.desc': 'JSON format, minify, convert to YAML/XML/CSV/TypeScript/Java/Go',
   'tool.regex.name': 'Regex Tester',
   'tool.regex.desc': 'Regex real-time matching, capture groups, common patterns',
-  'tool.dedup.name': 'Deduplicator',
+  'tool.dedup.name': 'Text Dedup',
   'tool.dedup.desc': 'Remove duplicate lines with custom separator and sorting',
+  'tool.markdown.name': 'Markdown Editor',
+  'tool.markdown.desc': 'Markdown online editor with live preview',
 
   // Markdown Editor stats
   'md.words': 'Words',
@@ -386,6 +416,7 @@ const en: I18nMessages = {
   'ai.chatEmpty': 'Start a conversation',
   'ai.chatHint': 'Type a message and press Enter',
   'ai.inputPlaceholder': 'Type a message...',
+  'ai.inputHint': 'Enter to send · Shift+Enter for new line',
   'ai.clear': 'Clear chat',
   'ai.newChat': 'New Chat',
   'ai.delete': 'Delete',
@@ -395,6 +426,15 @@ const en: I18nMessages = {
   'ai.confirmClear': 'Clear all messages in this conversation?',
   'ai.confirmDelete': 'Delete this conversation?',
   'ai.noConversations': 'No conversations',
+  'ai.uploadFile': 'Upload file',
+  'ai.dragDropFile': 'Drop files here',
+  'ai.fileTooLarge': 'File "{name}" is larger than 100KB. Add it? Large files may exceed context limit.',
+
+  // AI suggestions
+  'ai.suggestion.jsonTool': '🔧 How to use JSON Converter?',
+  'ai.suggestion.regexTool': '🔍 How to use Regex Tester?',
+  'ai.suggestion.dedupTool': '📋 What features does Text Dedup have?',
+  'ai.suggestion.markdownTool': '📝 Usage of Markdown Editor',
 
   // AI Chat tool
   'tool.aichat.name': 'AI Assistant',

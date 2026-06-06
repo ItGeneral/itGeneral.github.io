@@ -40,13 +40,20 @@
       </div>
       <div class="toolbar-actions">
         <button class="action-btn" @click="copyResult" :title="t('dedup.copy')">
-          <span>📋</span> {{ t('dedup.copy') }}
+          <span class="btn-icon">📋</span>
+          <span class="btn-text">{{ t('dedup.copy') }}</span>
         </button>
         <button class="action-btn" @click="clearAll" :title="t('dedup.clear')">
-          <span>🗑️</span> {{ t('dedup.clear') }}
+          <span class="btn-icon">🗑️</span>
+          <span class="btn-text">{{ t('dedup.clear') }}</span>
         </button>
         <button class="action-btn" @click="loadSample" :title="t('dedup.sample')">
-          <span>💡</span> {{ t('dedup.sample') }}
+          <span class="btn-icon">💡</span>
+          <span class="btn-text">{{ t('dedup.sample') }}</span>
+        </button>
+        <button class="action-btn" @click="openHelp" :title="t('common.help')">
+          <span class="btn-icon">📖</span>
+          <span class="btn-text">{{ t('common.help') }}</span>
         </button>
       </div>
     </div>
@@ -102,8 +109,15 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from '../../i18n'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
+const router = useRouter()
+
+// Help
+const openHelp = () => {
+  router.push('/help/deduplicator')
+}
 
 const inputText = ref('')
 const outputText = ref('')
@@ -279,61 +293,124 @@ function startResize(e: MouseEvent) {
 .separator-select {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  padding: 4px 8px;
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.separator-select:hover {
+  border-color: #0969da;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .sep-label {
   font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary, #586069);
+  font-weight: 500;
+  color: #57606a;
   white-space: nowrap;
 }
 
 .sep-dropdown {
-  padding: 3px 6px;
-  border: 1px solid var(--border-color-secondary, #dfe2e5);
-  border-radius: 4px;
-  font-size: 12px;
-  background: var(--bg-primary, #ffffff);
-  color: var(--text-primary, #24292e);
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  background: transparent;
+  color: #24292f;
   outline: none;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.sep-dropdown:hover {
+  background: rgba(9, 105, 218, 0.08);
+  color: #0969da;
 }
 
 .sep-dropdown:focus {
-  border-color: var(--accent-color, #0366d6);
+  background: rgba(9, 105, 218, 0.08);
+  color: #0969da;
 }
 
 .sep-input {
   width: 100px;
-  padding: 3px 8px;
-  border: 1px solid var(--border-color-secondary, #dfe2e5);
-  border-radius: 4px;
-  font-size: 12px;
+  padding: 6px 10px;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  font-size: 13px;
   font-family: 'SF Mono', 'Fira Code', monospace;
-  background: var(--bg-primary, #ffffff);
-  color: var(--text-primary, #24292e);
+  background: #ffffff;
+  color: #24292f;
   outline: none;
+  transition: all 0.2s ease;
 }
 
 .sep-input:focus {
-  border-color: var(--accent-color, #0366d6);
+  border-color: #0969da;
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
 }
 
 .option-label {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  color: var(--text-secondary, #586069);
+  gap: 6px;
+  font-size: 13px;
+  color: #57606a;
   cursor: pointer;
   white-space: nowrap;
   user-select: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.option-label:hover {
+  background: rgba(9, 105, 218, 0.06);
+  color: #0969da;
 }
 
 .option-label input[type="checkbox"] {
-  accent-color: var(--accent-color, #0366d6);
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #d0d7de;
+  border-radius: 4px;
+  background: #ffffff;
   cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.option-label input[type="checkbox"]:hover {
+  border-color: #0969da;
+}
+
+.option-label input[type="checkbox"]:checked {
+  background: #0969da;
+  border-color: #0969da;
+}
+
+.option-label input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 4px;
+  height: 8px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.option-label input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
 }
 
 .toolbar-actions {
@@ -360,6 +437,14 @@ function startResize(e: MouseEvent) {
 .action-btn:hover {
   background: var(--bg-tertiary, #e1e4e8);
   color: var(--text-primary, #24292e);
+}
+
+.action-btn .btn-icon {
+  font-size: 13px;
+}
+
+.action-btn .btn-text {
+  font-size: 12px;
 }
 
 /* 统计栏 */

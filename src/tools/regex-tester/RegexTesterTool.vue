@@ -31,8 +31,18 @@
         <div class="panel-header">
           <span class="panel-title">{{ t('regex.testText') }}</span>
           <div class="panel-actions">
-            <button class="action-btn" @click="loadSample">{{ t('regex.sample') }}</button>
-            <button class="action-btn" @click="clearText">{{ t('regex.clear') }}</button>
+            <button class="action-btn" @click="loadSample" :title="t('regex.sample')">
+              <span class="btn-icon">💡</span>
+              <span class="btn-text">{{ t('regex.sample') }}</span>
+            </button>
+            <button class="action-btn" @click="clearText" :title="t('regex.clear')">
+              <span class="btn-icon">🗑️</span>
+              <span class="btn-text">{{ t('regex.clear') }}</span>
+            </button>
+            <button class="action-btn" @click="openHelp" :title="t('common.help')">
+              <span class="btn-icon">📖</span>
+              <span class="btn-text">{{ t('common.help') }}</span>
+            </button>
           </div>
         </div>
         <textarea
@@ -104,8 +114,15 @@
 import { ref, computed, watch, nextTick } from 'vue'
 import { useI18n } from '../../i18n'
 import { renderRailroad } from './railroad'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
+const router = useRouter()
+
+// Help
+const openHelp = () => {
+  router.push('/help/regex-tester')
+}
 
 const pattern = ref('')
 const flags = ref('g')
@@ -435,17 +452,31 @@ function startResize(e: MouseEvent) {
 }
 
 .action-btn {
-  padding: 2px 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
   border: 1px solid var(--border-color-secondary, #dfe2e5);
-  border-radius: 4px;
+  border-radius: 6px;
   background: transparent;
   color: var(--text-secondary, #586069);
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .action-btn:hover {
   background: var(--bg-tertiary, #e1e4e8);
+  color: var(--text-primary, #24292e);
+  border-color: var(--accent-color, #0366d6);
+}
+
+.action-btn .btn-icon {
+  font-size: 13px;
+}
+
+.action-btn .btn-text {
+  font-size: 12px;
 }
 
 .match-count {

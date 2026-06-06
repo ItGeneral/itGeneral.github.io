@@ -29,6 +29,10 @@
           <span class="btn-icon">💡</span>
           <span class="btn-label">{{ t('json.sample') }}</span>
         </button>
+        <button class="toolbar-btn" @click="openHelp" :title="t('common.help')">
+          <span class="btn-icon">📖</span>
+          <span class="btn-label">{{ t('common.help') }}</span>
+        </button>
       </div>
     </div>
 
@@ -89,8 +93,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useI18n } from '../../i18n'
+import { useRouter } from 'vue-router'
 
 const { t } = useI18n()
+const router = useRouter()
+
+// Help
+const openHelp = () => {
+  router.push('/help/json-converter')
+}
+
 import { convert, CONVERT_ACTIONS, type ConvertMode } from './converters'
 import hljs from 'highlight.js/lib/core'
 import 'highlight.js/styles/github.css'

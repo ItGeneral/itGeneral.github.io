@@ -44,6 +44,9 @@
     </div>
 
     <div class="toolbar-actions">
+      <button class="toolbar-btn" @click="openHelp" :title="t('common.help')">
+        <span class="btn-icon">📖</span>
+      </button>
       <button class="toolbar-btn" @click="toggleTheme" :title="`切换主题 (${theme === 'dark' ? '浅色' : '深色'})`">
         <span class="btn-icon">{{ theme === 'dark' ? '☀️' : '🌙' }}</span>
       </button>
@@ -57,6 +60,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { eventBus } from '../Common/EventBus'
+import { useI18n } from '../../../../i18n'
+
+const { t } = useI18n()
 
 const emit = defineEmits<{
   'insert': [text: string]
@@ -101,6 +107,10 @@ const toggleTheme = () => {
 
 const togglePreviewFullscreen = () => {
   emit('preview-fullscreen')
+}
+
+const openHelp = () => {
+  eventBus.emit('help-requested')
 }
 </script>
 

@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import './tools/register'
 import { toolRegistry } from './core/toolRegistry'
 import LegalPage from './pages/LegalPage.vue'
+import HelpPage from './pages/HelpPage.vue'
 
 const routes = [
   {
@@ -13,6 +14,11 @@ const routes = [
     path: '/page/:page',
     name: 'legal',
     component: LegalPage,
+  },
+  {
+    path: '/help/:toolId',
+    name: 'help',
+    component: HelpPage,
   },
   {
     path: '/:pathMatch(.*)*',
