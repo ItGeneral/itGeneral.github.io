@@ -7,7 +7,7 @@ import HelpPage from './pages/HelpPage.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/markdown-editor',
+    redirect: '/ai-chat',
   },
   ...toolRegistry.getRoutes(),
   {
