@@ -3,6 +3,7 @@ import './tools/register'
 import { toolRegistry } from './core/toolRegistry'
 import LegalPage from './pages/LegalPage.vue'
 import HelpPage from './pages/HelpPage.vue'
+import { createAnalyticsPlugin } from './router/analyticsPlugin'
 
 const routes = [
   {
@@ -30,5 +31,8 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
 })
+
+// 注册统计插件
+createAnalyticsPlugin().install(router)
 
 export default router
