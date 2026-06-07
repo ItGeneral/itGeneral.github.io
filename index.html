@@ -11,8 +11,17 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2795550299175923" crossorigin="anonymous"></script>
 
-    <!-- Plausible Analytics -->
-    <script defer data-domain="itgeneral.github.io" src="https://plausible.io/js/script.js"></script>
+    <!-- Plausible Analytics (仅在生产环境加载) -->
+    <script>
+      // 检查是否在生产环境且启用了统计
+      if (import.meta.env.PROD && import.meta.env.VITE_PLAUSIBLE_ENABLED === 'true') {
+        const script = document.createElement('script');
+        script.defer = true;
+        script.dataset.domain = 'itgeneral.github.io';
+        script.src = 'https://plausible.io/js/script.js';
+        document.head.appendChild(script);
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>
