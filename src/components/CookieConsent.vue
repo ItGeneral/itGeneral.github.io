@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from '../i18n'
 import { useRouter } from 'vue-router'
 import { enableAnalytics, disableAnalytics } from '../core/analytics'
@@ -31,18 +31,19 @@ import { enableAnalytics, disableAnalytics } from '../core/analytics'
 const { t } = useI18n()
 const router = useRouter()
 
-// 检查是否已显示过
-const consent = localStorage.getItem('cookie-consent')
-const showBanner = computed(() => !consent)
+// 使用 ref 而不是直接读取 localStorage
+const showBanner = ref(!localStorage.getItem('cookie-consent'))
 
 // 接受统计
 const handleAccept = () => {
   enableAnalytics()
+  showBanner.value = false
 }
 
 // 拒绝统计
 const handleReject = () => {
   disableAnalytics()
+  showBanner.value = false
 }
 
 // 显示隐私政策
@@ -57,11 +58,11 @@ const showPrivacy = () => {
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--bg-secondary, #f5f5f5);
-  border-top: 1px solid var(--border-color, #e1e4e8);
+  background: var(--bg-primary, #ffffff);
+  border-top: 2px solid var(--border-color, #e1e4e8);
   padding: 16px 24px;
-  z-index: 1000;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .cookie-consent-content {
@@ -75,14 +76,21 @@ const showPrivacy = () => {
 
 .cookie-consent-text {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   flex: 1;
+  min-width: 0;
 }
 
 .cookie-icon {
-  font-size: 24px;
+  font-size: 28px;
   line-height: 1;
+  flex-shrink: 0;
+}
+
+.cookie-message {
+  flex: 1;
+  min-width: 0;
 }
 
 .cookie-message p {
@@ -93,17 +101,23 @@ const showPrivacy = () => {
 }
 
 .cookie-message p:not(:last-child) {
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.cookie-privacy-link {
+  margin-top: 4px;
 }
 
 .cookie-privacy-link a {
   color: var(--link-color, #0969da);
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration: none;
+  font-size: 13px;
 }
 
 .cookie-privacy-link a:hover {
   color: var(--link-hover-color, #0550ae);
+  text-decoration: underline;
 }
 
 .cookie-consent-actions {
@@ -113,18 +127,21 @@ const showPrivacy = () => {
 }
 
 .cookie-btn {
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: 1px solid var(--border-color, #e1e4e8);
-  border-radius: 6px;
+  border-radius: 8px;
   background: var(--bg-primary, #ffffff);
   color: var(--text-primary, #24292e);
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .cookie-btn:hover {
   background: var(--bg-hover, #f3f4f6);
+  transform: translateY(-1px);
 }
 
 .cookie-btn-accept {
@@ -135,6 +152,7 @@ const showPrivacy = () => {
 
 .cookie-btn-accept:hover {
   background: var(--primary-hover-color, #0550ae);
+  box-shadow: 0 2px 8px rgba(9, 105, 218, 0.3);
 }
 
 @media (max-width: 768px) {
