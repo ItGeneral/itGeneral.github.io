@@ -5,6 +5,7 @@ import AppLeftSidebar from './components/layout/AppLeftSidebar.vue'
 import AppTopNav from './components/layout/AppTopNav.vue'
 import AppHeader from './components/layout/AppHeader.vue'
 import AppFooter from './components/layout/AppFooter.vue'
+import CookieConsent from './components/CookieConsent.vue'
 
 const route = useRoute()
 const currentTheme = ref<'light' | 'dark'>('light')
@@ -19,6 +20,9 @@ const showLeftSidebar = computed(() => {
 
 <template>
   <div class="app-root" :data-theme="currentTheme">
+    <!-- Cookie 同意横幅 -->
+    <CookieConsent />
+
     <template v-if="isLegalPage">
       <router-view />
     </template>

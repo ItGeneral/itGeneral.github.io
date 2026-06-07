@@ -446,6 +446,12 @@ const en: I18nMessages = {
   'footer.about': 'About',
   'footer.contact': 'Contact',
   'footer.allRightsReserved': 'All rights reserved',
+
+  // Cookie Consent
+  'cookieConsent.message': '我们使用 Plausible 统计访问数据，帮助我们改进工具。您可以随时拒绝。',
+  'cookieConsent.privacyLink': '查看隐私政策',
+  'cookieConsent.reject': '拒绝',
+  'cookieConsent.accept': '接受统计',
 }
 
 const messages: Record<Locale, I18nMessages> = { zh, en }
