@@ -44,14 +44,32 @@ const privacyZh: LegalPageContent = {
       <li><strong>文件附件：</strong> 如果您向 AI 聊天附加文件，文件内容将从您的浏览器读取并包含在您发送给 AI 服务商的消息中。我们不会存储这些文件。</li>
     </ul>
 
-    <h3>2.3 自动收集的信息</h3>
-    <p>我们可能会使用第三方分析服务（如 Google Analytics）来了解我们的工具使用情况。这有助于我们改进性能、修复错误并确定功能优先级。收集的信息包括：</p>
+    <h3>2.3 网站统计分析</h3>
+    <p>我们使用 Plausible Analytics 统计网站访问数据，用于了解工具使用情况和优化用户体验。Plausible Analytics 是隐私友好的分析工具，具有以下特点：</p>
     <ul>
-      <li><strong>匿名使用统计：</strong> 页面浏览量、您使用的工具和一般使用模式</li>
-      <li><strong>浏览器信息：</strong> 浏览器类型、版本和操作系统（用于兼容性优化）</li>
-      <li><strong>设备类型：</strong> 您使用的是桌面设备、平板设备还是移动设备</li>
+      <li><strong>不使用 Cookie：</strong> 不使用 Cookie 追踪用户</li>
+      <li><strong>不收集个人信息：</strong> 不收集姓名、电子邮件地址等个人身份信息</li>
+      <li><strong>数据用途：</strong> 仅用于统计分析，帮助了解工具使用情况</li>
+      <li><strong>数据安全：</strong> 数据存储在欧盟境内服务器，符合 GDPR 和 CCPA 要求</li>
     </ul>
-    <p><strong>我们不收集：</strong> 通过分析收集的个人身份信息、姓名、电子邮件地址或精确位置数据。</p>
+
+    <h4>收集的数据</h4>
+    <p>我们收集以下统计数据：</p>
+    <ul>
+      <li><strong>页面访问数据：</strong> 页面访问次数、访问人数、访问来源</li>
+      <li><strong>用户行为：</strong> 用户访问路径、页面停留时间</li>
+      <li><strong>技术信息：</strong> 浏览器类型、设备类型、操作系统</li>
+    </ul>
+
+    <h4>您的选择</h4>
+    <p>您可以随时：</p>
+    <ul>
+      <li>通过 Cookie 横幅接受或拒绝统计</li>
+      <li>在设置页面中启用或禁用统计</li>
+      <li>拒绝统计不影响使用任何功能</li>
+    </ul>
+
+    <p>如需了解更多，请访问 <a href="https://plausible.io/privacy-policy" target="_blank" rel="noopener">Plausible 隐私政策</a>。</p>
 
     <h2>3. Cookie 和跟踪技术</h2>
 
@@ -215,14 +233,32 @@ const privacyEn: LegalPageContent = {
       <li><strong>File Attachments:</strong> If you attach files to AI chat, the file content is read from your browser and included in your message to the AI provider. We do not store these files.</li>
     </ul>
 
-    <h3>2.3 Automatically Collected Information</h3>
-    <p>We may use third-party analytics services (such as Google Analytics) to understand how our tools are used. This helps us improve performance, fix bugs, and prioritize features. The information collected includes:</p>
+    <h3>2.3 Website Analytics</h3>
+    <p>We use Plausible Analytics for website usage statistics to understand how our tools are used and improve user experience. Plausible Analytics is a privacy-friendly analytics tool with the following features:</p>
     <ul>
-      <li><strong>Anonymous Usage Statistics:</strong> Page views, which tools you use, and general usage patterns</li>
-      <li><strong>Browser Information:</strong> Browser type, version, and operating system (for compatibility optimization)</li>
-      <li><strong>Device Type:</strong> Whether you're on a desktop, tablet, or mobile device</li>
+      <li><strong>No Cookie Tracking:</strong> Does not use cookies to track users</li>
+      <li><strong>No Personal Information:</strong> Does not collect names, email addresses, or other personally identifiable information</li>
+      <li><strong>Data Purpose:</strong> Collected data is used only for statistical analysis to help improve our tools</li>
+      <li><strong>Data Security:</strong> Data is stored on servers in the European Union, compliant with GDPR and CCPA requirements</li>
     </ul>
-    <p><strong>We do not collect:</strong> Personally identifiable information, names, email addresses, or precise location data through analytics.</p>
+
+    <h4>Data Collected</h4>
+    <p>We collect the following statistics:</p>
+    <ul>
+      <li><strong>Page Visit Data:</strong> Page views, unique visitors, referral sources</li>
+      <li><strong>User Behavior:</strong> Navigation paths, time spent on pages</li>
+      <li><strong>Technical Information:</strong> Browser type, device type, operating system</li>
+    </ul>
+
+    <h4>Your Choices</h4>
+    <p>You can:</p>
+    <ul>
+      <li>Accept or decline analytics through the Cookie consent banner</li>
+      <li>Enable or disable analytics in settings at any time</li>
+      <li>Declining analytics does not affect your ability to use any features</li>
+    </ul>
+
+    <p>For more information, please visit the <a href="https://plausible.io/privacy-policy" target="_blank" rel="noopener">Plausible Privacy Policy</a>.</p>
 
     <h2>3. Cookies and Tracking Technologies</h2>
 
