@@ -174,7 +174,7 @@ The built files will be in the `dist` directory.
 
 ### Third-Party Services
 - **Google AdSense**: Used for displaying ads (uses cookies)
-- **Analytics**: Anonymous usage statistics to improve performance
+- **Plausible Analytics**: Privacy-friendly website analytics (no cookies, no personal data)
 
 For detailed information, please review our [Privacy Policy](https://itgeneral.github.io/ai-tools/page/privacy) and [Terms of Service](https://itgeneral.github.io/ai-tools/page/terms).
 
