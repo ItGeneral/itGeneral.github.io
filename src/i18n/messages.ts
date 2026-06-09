@@ -231,6 +231,31 @@ const zh: I18nMessages = {
   'footer.about': '关于我们',
   'footer.contact': '联系我们',
   'footer.allRightsReserved': '保留所有权利',
+
+  // Cookie Consent
+  'cookieConsent.message': '我们使用 Plausible 统计访问数据，帮助我们改进工具。您可以随时拒绝。',
+  'cookieConsent.privacyLink': '查看隐私政策',
+  'cookieConsent.reject': '拒绝',
+  'cookieConsent.accept': '接受统计',
+
+  // Feedback
+  'feedback.button': '反馈建议',
+  'feedback.title': '反馈建议',
+  'feedback.typeLabel': '反馈类型',
+  'feedback.typePlaceholder': '请选择反馈类型',
+  'feedback.typeBug': 'Bug 反馈',
+  'feedback.typeFeature': '功能建议',
+  'feedback.typeImprovement': '改进建议',
+  'feedback.typeOther': '其他',
+  'feedback.contentLabel': '反馈内容',
+  'feedback.contentPlaceholder': '请详细描述您的反馈意见...',
+  'feedback.emailLabel': '联系邮箱（可选）',
+  'feedback.emailPlaceholder': 'your@email.com',
+  'feedback.cancel': '取消',
+  'feedback.submit': '提交反馈',
+  'feedback.submitting': '提交中...',
+  'feedback.success': '感谢您的反馈！我们会尽快处理。',
+  'feedback.error': '提交失败，请稍后重试。',
 }
 
 const en: I18nMessages = {
@@ -462,10 +487,29 @@ const en: I18nMessages = {
   'footer.allRightsReserved': 'All rights reserved',
 
   // Cookie Consent
-  'cookieConsent.message': '我们使用 Plausible 统计访问数据，帮助我们改进工具。您可以随时拒绝。',
-  'cookieConsent.privacyLink': '查看隐私政策',
-  'cookieConsent.reject': '拒绝',
-  'cookieConsent.accept': '接受统计',
+  'cookieConsent.message': 'We use Plausible analytics to help us improve our tools. You can decline at any time.',
+  'cookieConsent.privacyLink': 'View Privacy Policy',
+  'cookieConsent.reject': 'Decline',
+  'cookieConsent.accept': 'Accept',
+
+  // Feedback
+  'feedback.button': 'Feedback',
+  'feedback.title': 'Send Feedback',
+  'feedback.typeLabel': 'Feedback Type',
+  'feedback.typePlaceholder': 'Select feedback type',
+  'feedback.typeBug': 'Bug Report',
+  'feedback.typeFeature': 'Feature Request',
+  'feedback.typeImprovement': 'Improvement Suggestion',
+  'feedback.typeOther': 'Other',
+  'feedback.contentLabel': 'Feedback',
+  'feedback.contentPlaceholder': 'Please describe your feedback in detail...',
+  'feedback.emailLabel': 'Email (optional)',
+  'feedback.emailPlaceholder': 'your@email.com',
+  'feedback.cancel': 'Cancel',
+  'feedback.submit': 'Submit',
+  'feedback.submitting': 'Submitting...',
+  'feedback.success': 'Thank you for your feedback! We will process it soon.',
+  'feedback.error': 'Submission failed, please try again later.',
 }
 
 const messages: Record<Locale, I18nMessages> = { zh, en }

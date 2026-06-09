@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toolRegistry } from '../../core/toolRegistry'
 import { useI18n } from '../../i18n'
+import FeedbackDialog from '../FeedbackDialog.vue'
 
 const { t, locale, setLocale } = useI18n()
+
+const feedbackDialog = ref<InstanceType<typeof FeedbackDialog>>()
 
 const toggleLocale = () => {
   setLocale(locale.value === 'zh' ? 'en' : 'zh')
@@ -57,8 +60,11 @@ const tooltipStyle = computed(() => ({ top: '0px', left: '0px' }))
       </div>
     </div>
 
-    <!-- 右侧：语言切换 -->
+    <!-- 右侧：语言切换和反馈 -->
     <div class="nav-right">
+      <button class="feedback-btn" @click="feedbackDialog?.open()" :title="t('feedback.button')">
+        <span class="feedback-icon">💬</span>
+      </button>
       <button class="lang-btn" @click="toggleLocale" :title="t('sidebar.language')">
         <span class="lang-icon">{{ locale === 'zh' ? '🇨🇳' : '🇺🇸' }}</span>
         <span class="lang-label">{{ locale === 'zh' ? '中文' : 'EN' }}</span>
@@ -71,6 +77,9 @@ const tooltipStyle = computed(() => ({ top: '0px', left: '0px' }))
         {{ tooltipText }}
       </div>
     </Teleport>
+
+    <!-- 反馈对话框 -->
+    <FeedbackDialog ref="feedbackDialog" />
   </nav>
 </template>
 
@@ -157,6 +166,28 @@ const tooltipStyle = computed(() => ({ top: '0px', left: '0px' }))
   gap: 8px;
   flex-shrink: 0;
   margin-left: auto;
+}
+
+.feedback-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.feedback-btn:hover {
+  background: rgba(9, 105, 218, 0.08);
+}
+
+.feedback-icon {
+  font-size: 18px;
+  line-height: 1;
 }
 
 .lang-btn {

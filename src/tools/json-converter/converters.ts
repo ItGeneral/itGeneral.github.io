@@ -70,6 +70,198 @@ export function stripJsonComments(input: string): string {
 }
 
 /**
+ * 格式化带注释的 JSON（保留注释，只调整缩进）
+ * 使用 tokenizer 方式，逐 token 输出并调整缩进
+ */
+export function formatJsonc(input: string, indent: number = 2): string {
+  type Token = { type: string; value: string }
+  const tokens: Token[] = []
+
+  // 1. 词法分析
+  let i = 0
+  const len = input.length
+  while (i < len) {
+    const ch = input[i]
+
+    // 空白
+    if (ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r') {
+      i++
+      continue
+    }
+
+    // 字符串
+    if (ch === '"') {
+      let s = '"'
+      i++
+      while (i < len) {
+        if (input[i] === '\\') {
+          s += input[i] + (input[i + 1] || '')
+          i += 2
+        } else if (input[i] === '"') {
+          s += '"'
+          i++
+          break
+        } else {
+          s += input[i]
+          i++
+        }
+      }
+      tokens.push({ type: 'string', value: s })
+      continue
+    }
+
+    // 单行注释
+    if (ch === '/' && input[i + 1] === '/') {
+      let c = ''
+      i += 2
+      while (i < len && input[i] !== '\n') {
+        c += input[i]
+        i++
+      }
+      tokens.push({ type: 'comment', value: '//' + c })
+      continue
+    }
+
+    // 多行注释
+    if (ch === '/' && input[i + 1] === '*') {
+      let c = '/*'
+      i += 2
+      while (i < len && !(input[i] === '*' && input[i + 1] === '/')) {
+        c += input[i]
+        i++
+      }
+      if (i < len) {
+        c += '*/'
+        i += 2
+      }
+      tokens.push({ type: 'comment', value: c })
+      continue
+    }
+
+    // 结构字符
+    if (ch === '{' || ch === '}' || ch === '[' || ch === ']') {
+      tokens.push({ type: 'bracket', value: ch })
+      i++
+      continue
+    }
+
+    // 冒号
+    if (ch === ':') {
+      tokens.push({ type: 'colon', value: ':' })
+      i++
+      continue
+    }
+
+    // 逗号
+    if (ch === ',') {
+      tokens.push({ type: 'comma', value: ',' })
+      i++
+      continue
+    }
+
+    // 数字、true、false、null
+    if (ch === '-' || ch === '+' || (ch >= '0' && ch <= '9') || ch === 't' || ch === 'f' || ch === 'n') {
+      let literal = ''
+      while (i < len && !/[\s,}\]:]/.test(input[i])) {
+        literal += input[i]
+        i++
+      }
+      tokens.push({ type: 'literal', value: literal })
+      continue
+    }
+
+    // 其他字符
+    tokens.push({ type: 'other', value: ch })
+    i++
+  }
+
+  // 2. 重新格式化输出
+  let result = ''
+  let depth = 0
+  const pad = () => ' '.repeat(depth * indent)
+
+  // 判断下一个非 comment token 是否是 } 或 ]
+  const isNextClosing = (idx: number): boolean => {
+    for (let j = idx; j < tokens.length; j++) {
+      if (tokens[j].type === 'comment') continue
+      return tokens[j].value === '}' || tokens[j].value === ']'
+    }
+    return false
+  }
+
+  // 判断当前位置后面紧跟的（跳过 comment）是否是 comment
+  const nextNonWhitespaceIsComment = (idx: number): boolean => {
+    for (let j = idx; j < tokens.length; j++) {
+      if (tokens[j].type === 'comment') return true
+      return false
+    }
+    return false
+  }
+
+  let needNewline = false
+
+  for (let idx = 0; idx < tokens.length; idx++) {
+    const tok = tokens[idx]
+
+    if (tok.type === 'bracket') {
+      if (tok.value === '{' || tok.value === '[') {
+        if (isNextClosing(idx + 1)) {
+          // 空对象/数组
+          if (needNewline) result += '\n' + pad()
+          result += tok.value
+          needNewline = false
+        } else {
+          if (needNewline) result += '\n' + pad()
+          result += tok.value
+          depth++
+          needNewline = true
+        }
+      } else {
+        // } 或 ]
+        depth = Math.max(0, depth - 1)
+        if (needNewline) result += '\n' + pad()
+        result += tok.value
+        needNewline = false
+      }
+    } else if (tok.type === 'string') {
+      if (needNewline) { result += '\n' + pad(); needNewline = false }
+      result += tok.value
+    } else if (tok.type === 'colon') {
+      result += ': '
+    } else if (tok.type === 'comma') {
+      result += ','
+      // 逗号后面如果紧跟注释，不换行，留空格让注释跟在同一行
+      if (idx + 1 < tokens.length && tokens[idx + 1].type === 'comment') {
+        result += ' '
+      } else {
+        needNewline = true
+      }
+    } else if (tok.type === 'literal') {
+      if (needNewline) { result += '\n' + pad(); needNewline = false }
+      result += tok.value
+    } else if (tok.type === 'comment') {
+      // 检查前一个 token 是否是逗号（已在同一行）
+      const prevTok = idx > 0 ? tokens[idx - 1] : null
+      if (prevTok && prevTok.type === 'comma') {
+        // 跟在逗号后面，已经在同一行了
+        result += tok.value
+      } else {
+        // 独立行注释
+        if (needNewline) { result += '\n' + pad(); needNewline = false }
+        else result += '\n' + pad()
+        result += tok.value
+      }
+      needNewline = true
+    } else {
+      if (needNewline) { result += '\n' + pad(); needNewline = false }
+      result += tok.value
+    }
+  }
+
+  return result
+}
+
+/**
  * 安全解析 JSON（支持注释、尾随逗号、尾部无效内容）
  */
 export function safeJsonParse(input: string): any {

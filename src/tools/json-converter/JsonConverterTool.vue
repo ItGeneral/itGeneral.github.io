@@ -109,7 +109,7 @@ const openHelp = () => {
   router.push('/help/json-converter')
 }
 
-import { convert, CONVERT_ACTIONS, type ConvertMode, safeJsonParse, formatJsonError } from './converters'
+import { convert, CONVERT_ACTIONS, type ConvertMode, safeJsonParse, formatJsonError, formatJsonc } from './converters'
 import hljs from 'highlight.js/lib/core'
 import 'highlight.js/styles/github.css'
 import json from 'highlight.js/lib/languages/json'
@@ -132,6 +132,7 @@ const inputJson = ref('')
 const outputText = ref('')
 const currentMode = ref<ConvertMode>('format')
 const pathQuery = ref('$')
+let formatTimer: ReturnType<typeof setTimeout> | null = null
 const panelWidth = ref(50)
 const error = ref('')
 const isValid = ref(true)
@@ -211,6 +212,24 @@ function handleInput() {
   validateJson()
   if (currentMode.value !== 'path') {
     doConvert()
+  }
+  // 自动格式化输入（防抖 800ms）
+  if (formatTimer) clearTimeout(formatTimer)
+  formatTimer = setTimeout(() => {
+    autoFormatInput()
+  }, 800)
+}
+
+function autoFormatInput() {
+  const text = inputJson.value.trim()
+  if (!text) return
+  try {
+    const formatted = formatJsonc(text)
+    if (formatted !== inputJson.value) {
+      inputJson.value = formatted
+    }
+  } catch {
+    // 输入不合法时不做处理
   }
 }
 

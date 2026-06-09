@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import AppLeftSidebar from './components/layout/AppLeftSidebar.vue'
 import AppTopNav from './components/layout/AppTopNav.vue'
 import AppHeader from './components/layout/AppHeader.vue'
 import AppFooter from './components/layout/AppFooter.vue'
 import CookieConsent from './components/CookieConsent.vue'
+import { initEmailJS } from './core/email'
 
 const route = useRoute()
 const currentTheme = ref<'light' | 'dark'>('light')
+
+// 初始化 EmailJS
+onMounted(() => {
+  initEmailJS()
+})
 
 const isLegalPage = computed(() => route.name === 'legal')
 
