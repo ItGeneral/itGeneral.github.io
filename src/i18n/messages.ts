@@ -149,6 +149,12 @@ const zh: I18nMessages = {
   'doc.untitled': '未命名文档',
   'doc.welcome': '欢迎文档',
   'doc.emptyDocs': '暂无文档',
+  'doc.documents': '文档',
+  'doc.newDoc': '新建文档',
+  'doc.collapse': '收起',
+  'doc.expand': '展开',
+  'doc.delete': '删除',
+  'doc.confirmDelete': '确定删除这个文档吗？',
 
   // Tool names and descriptions
   'tool.json.name': 'JSON 转换器',
@@ -197,6 +203,7 @@ const zh: I18nMessages = {
   'ai.inputHint': 'Enter 发送 · Shift+Enter 换行',
   'ai.clear': '清空对话',
   'ai.newChat': '新建对话',
+  'ai.conversations': '对话列表',
   'ai.delete': '删除',
   'ai.rename': '重命名',
   'ai.dblClickRename': '双击重命名',
@@ -371,6 +378,12 @@ const en: I18nMessages = {
   'doc.untitled': 'Untitled',
   'doc.welcome': 'Welcome',
   'doc.emptyDocs': 'No documents',
+  'doc.documents': 'Documents',
+  'doc.newDoc': 'New Document',
+  'doc.collapse': 'Collapse',
+  'doc.expand': 'Expand',
+  'doc.delete': 'Delete',
+  'doc.confirmDelete': 'Delete this document?',
 
   // Tool names and descriptions
   'tool.json.name': 'JSON Converter',
@@ -419,6 +432,7 @@ const en: I18nMessages = {
   'ai.inputHint': 'Enter to send · Shift+Enter for new line',
   'ai.clear': 'Clear chat',
   'ai.newChat': 'New Chat',
+  'ai.conversations': 'Conversations',
   'ai.delete': 'Delete',
   'ai.rename': 'Rename',
   'ai.dblClickRename': 'Double-click to rename',

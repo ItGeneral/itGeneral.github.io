@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { docStore } from '../../store/docStore'
 import { chatStore } from '../../store/chatStore'
@@ -9,6 +9,8 @@ const { t, locale } = useI18n()
 
 const route = useRoute()
 const router = useRouter()
+
+const visible = ref(true)
 
 const isAIChatActive = computed(() => route.path === '/ai-chat')
 const isMarkdownActive = computed(() => route.path === '/markdown-editor')
@@ -153,15 +155,23 @@ onMounted(async () => {
 </script>
 
 <template>
-  <aside class="left-sidebar">
-    <!-- AI 对话列表 -->
-    <div v-if="isAIChatActive" class="sidebar-section">
-      <button class="section-action-btn" @click="createNewConv">
-        <span class="plus">+</span>
-        {{ t('ai.newChat') }}
-      </button>
+  <div class="left-sidebar-wrapper">
+    <transition name="sidebar-slide">
+      <aside v-if="visible" class="left-sidebar">
+        <!-- 收起按钮 -->
+        <div class="sidebar-collapse-bar">
+          <button class="collapse-btn" @click="visible = false" :title="t('sidebar.collapse')">
+            ◀
+          </button>
+        </div>
 
-      <div class="item-list">
+      <!-- AI 对话列表 -->
+      <div v-if="isAIChatActive" class="sidebar-section">
+        <button class="section-action-btn" @click.stop="createNewConv">
+          <span class="plus">+</span>
+          {{ t('ai.newChat') }}
+        </button>
+        <div class="item-list">
         <div
           v-for="conv in conversations"
           :key="conv.id"
@@ -198,7 +208,7 @@ onMounted(async () => {
 
     <!-- Markdown 文档列表 -->
     <div v-if="isMarkdownActive" class="sidebar-section">
-      <button class="section-action-btn" @click="createDoc">
+      <button class="section-action-btn" @click.stop="createDoc">
         <span class="plus">+</span>
         {{ t('sidebar.newDoc') }}
       </button>
@@ -251,9 +261,21 @@ onMounted(async () => {
       </div>
     </Teleport>
   </aside>
+  </transition>
+
+  <!-- 展开按钮 -->
+  <button v-if="!visible" class="sidebar-expand-btn" @click="visible = true" :title="t('sidebar.expand')">
+    ▶
+  </button>
+  </div>
 </template>
 
 <style scoped>
+.left-sidebar-wrapper {
+  display: flex;
+  flex-shrink: 0;
+}
+
 .left-sidebar {
   width: 260px;
   background: #f7f7f8;
@@ -262,6 +284,63 @@ onMounted(async () => {
   flex-direction: column;
   flex-shrink: 0;
   overflow: hidden;
+}
+
+.sidebar-collapse-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 10px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.collapse-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  border-radius: 4px;
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.collapse-btn:hover {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.sidebar-expand-btn {
+  width: 28px;
+  height: 48px;
+  border: none;
+  background: #f7f7f8;
+  border-right: 1px solid #e5e5e5;
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.sidebar-expand-btn:hover {
+  background: #ebedf0;
+  color: #374151;
+}
+
+.sidebar-slide-enter-active,
+.sidebar-slide-leave-active {
+  transition: all 0.2s ease;
+}
+
+.sidebar-slide-enter-from,
+.sidebar-slide-leave-to {
+  width: 0;
+  opacity: 0;
 }
 
 .sidebar-section {

@@ -57,14 +57,18 @@
             {{ isValid ? '✓ ' + t('json.valid') : '✗ ' + t('json.invalid') }}
           </span>
         </div>
-        <textarea
-          ref="inputRef"
-          v-model="inputJson"
-          class="json-textarea"
-          :placeholder="t('json.inputPlaceholder')"
-          spellcheck="false"
-          @input="handleInput"
-        ></textarea>
+        <div class="editor-with-lines">
+          <div class="line-numbers" ref="inputLineNumbers"><div v-for="n in inputLineCount" :key="n">{{ n }}</div></div>
+          <textarea
+            ref="inputRef"
+            v-model="inputJson"
+            class="json-textarea"
+            :placeholder="t('json.inputPlaceholder')"
+            spellcheck="false"
+            @input="handleInput"
+            @scroll="syncInputLines"
+          ></textarea>
+        </div>
       </div>
 
       <!-- 拖拽分割线 -->
@@ -74,9 +78,11 @@
       <div class="panel output-panel" :style="{ width: (100 - panelWidth) + '%' }">
         <div class="panel-header">
           <span class="panel-title">{{ t('json.output') }} ({{ outputLabel }})</span>
-          <span v-if="error" class="error-badge">{{ error }}</span>
         </div>
-        <pre v-if="outputText" class="output-pre"><code ref="outputCodeRef" :class="outputLangClass" v-html="highlightedOutput"></code></pre>
+        <div class="editor-with-lines" v-if="outputText">
+          <div class="line-numbers" ref="outputLineNumbers"><div v-for="n in outputLineCount" :key="n">{{ n }}</div></div>
+          <pre class="output-pre" :class="{ 'output-error': !!error }" @scroll="syncOutputLines"><code ref="outputCodeRef" :class="outputLangClass" v-html="highlightedOutput"></code></pre>
+        </div>
         <div v-else class="output-placeholder">{{ t('json.outputPlaceholder') }}</div>
       </div>
     </div>
@@ -103,7 +109,7 @@ const openHelp = () => {
   router.push('/help/json-converter')
 }
 
-import { convert, CONVERT_ACTIONS, type ConvertMode } from './converters'
+import { convert, CONVERT_ACTIONS, type ConvertMode, safeJsonParse, formatJsonError } from './converters'
 import hljs from 'highlight.js/lib/core'
 import 'highlight.js/styles/github.css'
 import json from 'highlight.js/lib/languages/json'
@@ -130,6 +136,35 @@ const panelWidth = ref(50)
 const error = ref('')
 const isValid = ref(true)
 const inputRef = ref<HTMLTextAreaElement | null>(null)
+const inputLineNumbers = ref<HTMLElement | null>(null)
+const outputLineNumbers = ref<HTMLElement | null>(null)
+
+// 行号
+const inputLineCount = computed(() => {
+  const text = inputJson.value
+  if (!text) return 1
+  return (text.match(/\n/g) || []).length + 1
+})
+
+const outputLineCount = computed(() => {
+  const text = outputText.value
+  if (!text) return 1
+  return (text.match(/\n/g) || []).length + 1
+})
+
+// 滚动同步
+const syncInputLines = () => {
+  if (inputRef.value && inputLineNumbers.value) {
+    inputLineNumbers.value.scrollTop = inputRef.value.scrollTop
+  }
+}
+
+const syncOutputLines = (e: Event) => {
+  const pre = e.target as HTMLElement
+  if (outputLineNumbers.value) {
+    outputLineNumbers.value.scrollTop = pre.scrollTop
+  }
+}
 
 const groups = ['format', 'convert', 'code', 'analyze'] as const
 
@@ -186,7 +221,7 @@ function validateJson() {
     return
   }
   try {
-    JSON.parse(inputJson.value)
+    safeJsonParse(inputJson.value)
     isValid.value = true
     error.value = ''
   } catch (e) {
@@ -214,8 +249,8 @@ function doConvert() {
     error.value = ''
     outputText.value = convert(inputJson.value, currentMode.value, pathQuery.value)
   } catch (e: unknown) {
-    error.value = e instanceof Error ? e.message : String(e)
-    outputText.value = ''
+    error.value = formatJsonError(inputJson.value, e)
+    outputText.value = error.value
   }
 }
 
@@ -442,6 +477,33 @@ function startResize(e: MouseEvent) {
   white-space: nowrap;
 }
 
+/* 编辑器+行号容器 */
+.editor-with-lines {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.line-numbers {
+  width: 44px;
+  flex-shrink: 0;
+  padding: 12px 8px 12px 4px;
+  text-align: right;
+  font-family: 'SF Mono', Monaco, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #adb5bd;
+  background: var(--bg-primary, #f8f9fa);
+  border-right: 1px solid #e9ecef;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.line-numbers div {
+  height: calc(13px * 1.6);
+}
+
 .json-textarea {
   flex: 1;
   width: 100%;
@@ -480,6 +542,15 @@ function startResize(e: MouseEvent) {
   font-size: inherit;
   background: transparent !important;
   padding: 0 !important;
+}
+
+.output-error {
+  color: #dc2626 !important;
+}
+
+.output-error code {
+  color: #dc2626 !important;
+  background: transparent !important;
 }
 
 .output-placeholder {

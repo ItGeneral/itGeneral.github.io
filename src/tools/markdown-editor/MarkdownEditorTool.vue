@@ -49,6 +49,7 @@ const editorWidth = ref(50)
 
 const editorRef = ref<InstanceType<typeof EditorCore>>()
 const previewRef = ref<InstanceType<typeof Preview>>()
+
 const statsBarRef = ref<InstanceType<typeof StatsBar>>()
 
 const configManager = new ConfigManager()

@@ -2,22 +2,171 @@
  * JSON 转换工具函数集合
  */
 
+// ============ 注释处理 ============
+
+/**
+ * 移除 JSON 字符串中的注释（单行 // 和多行 /* *‍/）
+ * 支持带注释的 JSON（JSONC）格式
+ */
+export function stripJsonComments(input: string): string {
+  let result = ''
+  let i = 0
+  const len = input.length
+  let inString = false
+  let stringChar = ''
+
+  while (i < len) {
+    const ch = input[i]
+    const next = input[i + 1]
+
+    // 在字符串内
+    if (inString) {
+      result += ch
+      if (ch === '\\') {
+        // 转义字符，跳过下一个
+        i++
+        if (i < len) result += input[i]
+      } else if (ch === stringChar) {
+        inString = false
+      }
+      i++
+      continue
+    }
+
+    // 进入字符串
+    if (ch === '"' || ch === "'") {
+      inString = true
+      stringChar = ch
+      result += ch
+      i++
+      continue
+    }
+
+    // 单行注释 //
+    if (ch === '/' && next === '/') {
+      // 跳过到行尾
+      i += 2
+      while (i < len && input[i] !== '\n') i++
+      continue
+    }
+
+    // 多行注释 /* ... */
+    if (ch === '/' && next === '*') {
+      i += 2
+      while (i < len && !(input[i] === '*' && input[i + 1] === '/')) i++
+      i += 2 // 跳过 */
+      continue
+    }
+
+    // 尾随逗号处理（可选，在 } 或 ] 前的逗号）
+    result += ch
+    i++
+  }
+
+  // 移除尾随逗号（在 } 或 ] 前面的逗号）
+  result = result.replace(/,\s*([}\]])/g, '$1')
+
+  return result
+}
+
+/**
+ * 安全解析 JSON（支持注释、尾随逗号、尾部无效内容）
+ */
+export function safeJsonParse(input: string): any {
+  // 先尝试标准解析
+  try {
+    return JSON.parse(input)
+  } catch {}
+
+  // 剥离注释和尾随逗号
+  const cleaned = stripJsonComments(input)
+
+  try {
+    return JSON.parse(cleaned)
+  } catch {}
+
+  // 尝试找到有效 JSON 的结束位置
+  const trimmed = cleaned.trim()
+  if (!trimmed) throw new Error('Empty input')
+
+  // 确定起始字符，找到匹配的结束位置
+  const startChar = trimmed[0]
+  const endChar = startChar === '{' ? '}' : startChar === '[' ? ']' : null
+
+  if (endChar) {
+    let depth = 0
+    let inStr = false
+    let strCh = ''
+    for (let i = 0; i < trimmed.length; i++) {
+      const ch = trimmed[i]
+      if (inStr) {
+        if (ch === '\\') { i++; continue }
+        if (ch === strCh) inStr = false
+        continue
+      }
+      if (ch === '"' || ch === "'") { inStr = true; strCh = ch; continue }
+      if (ch === '{' || ch === '[') depth++
+      if (ch === '}' || ch === ']') {
+        depth--
+        if (depth === 0) {
+          // 找到匹配的结束位置，截取有效部分
+          return JSON.parse(trimmed.slice(0, i + 1))
+        }
+      }
+    }
+  }
+
+  throw new Error('Invalid JSON')
+}
+
+/**
+ * 格式化 JSON 解析错误，添加行列号信息
+ */
+export function formatJsonError(input: string, e: unknown): string {
+  const msg = e instanceof Error ? e.message : String(e)
+
+  // 尝试从错误信息中提取位置
+  const posMatch = msg.match(/position\s+(\d+)/i)
+  if (posMatch) {
+    const pos = parseInt(posMatch[1])
+    const before = input.slice(0, pos)
+    const line = (before.match(/\n/g) || []).length + 1
+    const col = pos - before.lastIndexOf('\n')
+    const nearText = input.slice(Math.max(0, pos - 20), Math.min(input.length, pos + 20))
+    return `Line ${line}, Column ${col}\n Near: ...${nearText}...\n ${msg}`
+  }
+
+  // column 行格式
+  const colMatch = msg.match(/line\s+(\d+)\s+column\s+(\d+)/i)
+  if (colMatch) {
+    const line = colMatch[1]
+    const col = colMatch[2]
+    const lineNum = parseInt(line)
+    const lines = input.split('\n')
+    const errorLine = lines[lineNum - 1] || ''
+    const pointer = ' '.repeat(parseInt(col) - 1) + '^'
+    return `Line ${line}, Column ${col}\n\n${errorLine}\n${pointer}\n\n${msg}`
+  }
+
+  return msg
+}
+
 // ============ 格式化 / 压缩 ============
 
 export function formatJson(input: string, indent: number = 2): string {
-  const obj = JSON.parse(input)
+  const obj = safeJsonParse(input)
   return JSON.stringify(obj, null, indent)
 }
 
 export function minifyJson(input: string): string {
-  const obj = JSON.parse(input)
+  const obj = safeJsonParse(input)
   return JSON.stringify(obj)
 }
 
 // ============ JSON → YAML ============
 
 export function jsonToYaml(input: string): string {
-  const obj = JSON.parse(input)
+  const obj = safeJsonParse(input)
   return objectToYaml(obj, 0)
 }
 
@@ -70,7 +219,7 @@ function objectToYaml(obj: unknown, indent: number): string {
 // ============ JSON → XML ============
 
 export function jsonToXml(input: string): string {
-  const obj = JSON.parse(input)
+  const obj = safeJsonParse(input)
   return `<?xml version="1.0" encoding="UTF-8"?>\n${objectToXml(obj, 'root')}`
 }
 
@@ -92,7 +241,7 @@ function objectToXml(obj: unknown, tagName: string, indent: number = 0): string 
 // ============ JSON → CSV ============
 
 export function jsonToCsv(input: string): string {
-  const arr = JSON.parse(input)
+  const arr = safeJsonParse(input)
   if (!Array.isArray(arr) || arr.length === 0) throw new Error('JSON must be a non-empty array to convert to CSV')
   const allKeys = new Set<string>()
   arr.forEach((item: unknown) => {
@@ -121,7 +270,7 @@ export function jsonToCsv(input: string): string {
 // ============ JSON → TypeScript ============
 
 export function jsonToTypescript(input: string, rootName: string = 'RootObject'): string {
-  const obj = JSON.parse(input)
+  const obj = safeJsonParse(input)
   const interfaces: Map<string, string> = new Map()
   generateTsInterface(obj, rootName, interfaces)
   return [...interfaces.values()].join('\n\n') + '\n'
@@ -172,7 +321,7 @@ function generateTsInterface(obj: unknown, name: string, interfaces: Map<string,
 // ============ JSON → Java ============
 
 export function jsonToJava(input: string, className: string = 'RootObject'): string {
-  const obj = JSON.parse(input)
+  const obj = safeJsonParse(input)
   const classes: string[] = []
   generateJavaClass(obj, className, classes)
   return classes.join('\n\n') + '\n'
@@ -214,7 +363,7 @@ function javaType(val: unknown, suggestedName: string, classes: string[]): strin
 // ============ JSON → Go Struct ============
 
 export function jsonToGo(input: string, structName: string = 'RootObject'): string {
-  const obj = JSON.parse(input)
+  const obj = safeJsonParse(input)
   const structs: string[] = []
   generateGoStruct(obj, structName, structs)
   return 'package main\n\n' + structs.join('\n\n') + '\n'
@@ -257,7 +406,7 @@ function goType(val: unknown, suggestedName: string, structs: string[]): string 
 // ============ JSON Schema 生成 ============
 
 export function jsonToSchema(input: string): string {
-  const obj = JSON.parse(input)
+  const obj = safeJsonParse(input)
   const schema = generateSchema(obj)
   schema['$schema'] = 'http://json-schema.org/draft-07/schema#'
   return JSON.stringify(schema, null, 2)
@@ -295,7 +444,7 @@ function generateSchema(obj: unknown): Record<string, unknown> {
 // ============ JSON Path 查询 ============
 
 export function queryJsonPath(input: string, path: string): string {
-  const obj = JSON.parse(input)
+  const obj = safeJsonParse(input)
   const result = resolvePath(obj, path)
   return JSON.stringify(result, null, 2)
 }

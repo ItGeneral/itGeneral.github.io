@@ -1,12 +1,10 @@
 <template>
   <div class="help-page">
-    <div class="help-header">
-      <button class="back-btn" @click="goBack">
-        <span class="back-icon">←</span>
-        <span class="back-text">{{ t('common.back') }}</span>
-      </button>
-      <h1 class="help-title">{{ toolName }}</h1>
-    </div>
+    <button class="back-float" @click="goBack" :title="t('common.back')">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M7.78 12.53a.75.75 0 0 1-1.06 0L2.47 8.28a.75.75 0 0 1 0-1.06l4.25-4.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L4.81 7h7.44a.75.75 0 0 1 0 1.5H4.81l2.97 2.97a.75.75 0 0 1 0 1.06Z"/>
+      </svg>
+    </button>
     <div class="help-content" ref="contentRef">
       <div v-if="renderedContent" v-html="renderedContent" class="markdown-body"></div>
       <div v-else class="loading-text">{{ t('common.loading') }}</div>
@@ -86,64 +84,33 @@ onMounted(() => {
   flex-direction: column;
   height: 100vh;
   background: var(--bg-primary, #ffffff);
+  position: relative;
 }
 
-.help-header {
-  display: flex;
-  align-items: center;
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--border-color, #eaecef);
-  background: var(--bg-secondary, #f6f8fa);
-  gap: 16px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.back-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border: 1px solid var(--border-color, #d0d7de);
-  border-radius: 8px;
-  background: var(--bg-primary, #ffffff);
-  color: var(--text-primary, #24292f);
-  font-size: 14px;
-  font-weight: 500;
+.back-float {
+  position: fixed;
+  top: 80px;
+  left: 280px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  color: #666;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 20;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.back-btn:hover {
-  background: var(--bg-tertiary, #e1e4e8);
-  border-color: var(--accent-color, #0366d6);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transform: translateY(-1px);
-}
-
-.back-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-}
-
-.back-icon {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.back-text {
-  font-size: 14px;
-}
-
-.help-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary, #24292f);
-  margin: 0;
-  flex: 1;
+.back-float:hover {
+  border-color: #667eea;
+  color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  transform: translateX(-2px);
 }
 
 .help-content {
