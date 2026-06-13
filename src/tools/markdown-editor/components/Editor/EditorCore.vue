@@ -12,7 +12,6 @@ import { eventBus } from '../Common/EventBus'
 
 const props = defineProps<{
   modelValue: string
-  theme?: 'light' | 'dark'
 }>()
 
 const emit = defineEmits<{
@@ -29,7 +28,7 @@ onMounted(() => {
     doc: props.modelValue,
     extensions: [
       basicSetup,
-      ...createMarkdownExtensions(props.theme === 'dark'),
+      ...createMarkdownExtensions(false),
       EditorView.updateListener.of((update) => {
         if (update.docChanged) {
           const newValue = update.state.doc.toString()
@@ -81,10 +80,6 @@ watch(() => props.modelValue, (newValue) => {
       }
     })
   }
-})
-
-watch(() => props.theme, (newTheme) => {
-  // Theme switching logic
 })
 
 defineExpose({

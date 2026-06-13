@@ -23,14 +23,14 @@
       </div>
     </div>
 
-    <div v-if="toc.length > 0" class="toc-sidebar">
+    <div v-if="toc.length > 0" class="toc-sidebar" ref="tocSidebar">
       <div class="toc-title">目录</div>
       <ul class="toc-list">
         <li v-for="item in toc" :key="item.anchor" :class="getTocItemClass(item)">
-          <a :href="`#${item.anchor}`" @click.prevent="scrollToAnchor(item.anchor)">{{ item.title }}</a>
+          <a :href="`#${item.anchor}`" @click.prevent="scrollToAnchor(item.anchor)" :class="[isHeadingActive(item) ? 'active' : '']" :data-anchor="item.anchor">{{ item.title }}</a>
           <ul v-if="item.children.length > 0" class="toc-sublist">
             <li v-for="child in item.children" :key="child.anchor">
-              <a :href="`#${child.anchor}`" @click.prevent="scrollToAnchor(child.anchor)">{{ child.title }}</a>
+              <a :href="`#${child.anchor}`" @click.prevent="scrollToAnchor(child.anchor)" :class="[isHeadingActive(child) ? 'active' : '']" :data-anchor="child.anchor">{{ child.title }}</a>
             </li>
           </ul>
         </li>
@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, watch, onMounted, onUnmounted, nextTick, computed } from 'vue'
 import { MarkdownRenderer } from './MarkdownRenderer'
 import { TOCGenerator, type TOCItem } from './TOCGenerator'
 import { SyncScroll } from './SyncScroll'
@@ -58,8 +58,10 @@ const emit = defineEmits<{
 
 const previewContainer = ref<HTMLElement>()
 const previewContent = ref<HTMLElement>()
+const tocSidebar = ref<HTMLElement>()
 const renderedHtml = ref('')
 const toc = ref<TOCItem[]>([])
+const activeHeading = ref('')
 const isFullscreen = ref(false)
 const showMermaidModal = ref(false)
 const mermaidZoom = ref(1)
@@ -74,6 +76,7 @@ const renderer = new MarkdownRenderer()
 const tocGenerator = new TOCGenerator()
 let syncScroll: SyncScroll | null = null
 let mermaidErrorCleanupTimer: number | null = null
+let intersectionObserver: IntersectionObserver | null = null
 
 const renderContent = async () => {
   removeMermaidErrorMessages()
@@ -91,6 +94,87 @@ const renderContent = async () => {
     removeMermaidErrorMessages()
     await nextTick()
     removeMermaidErrorMessages()
+
+    // Re-attach scroll listener and set initial active heading
+    setupIntersectionObserver()
+  }
+}
+
+const setupIntersectionObserver = () => {
+  if (!previewContent.value) return
+
+  // Clean up previous observer
+  if (intersectionObserver) {
+    intersectionObserver.disconnect()
+    intersectionObserver = null
+  }
+
+  const headings = previewContent.value.querySelectorAll('h1, h2, h3, h4, h5, h6')
+  if (headings.length === 0) return
+
+  // Collect all heading IDs for lookup
+  const headingIds: string[] = []
+  headings.forEach(h => {
+    const id = h.getAttribute('id')
+    if (id) headingIds.push(id)
+  })
+
+  // Core logic: always find the last heading that has scrolled past the top threshold
+  const updateActiveHeading = () => {
+    if (!previewContent.value) return
+    const containerRect = previewContent.value.getBoundingClientRect()
+    // Use a small offset so the heading is considered "active" right as it passes under the top
+    const threshold = containerRect.top + 20
+
+    let activeId: string | null = null
+    for (let i = headings.length - 1; i >= 0; i--) {
+      const rect = headings[i].getBoundingClientRect()
+      if (rect.top <= threshold) {
+        activeId = headings[i].getAttribute('id')
+        break
+      }
+    }
+
+    // If no heading has passed the threshold yet, highlight the first one
+    if (!activeId && headingIds.length > 0) {
+      activeId = headingIds[0]
+    }
+
+    if (activeId) {
+      activeHeading.value = activeId
+      scrollTocToActive(activeId)
+    }
+  }
+
+  // Use IntersectionObserver just as a scroll event trigger — the actual
+  // active heading calculation is done by updateActiveHeading() which always
+  // picks the last heading scrolled past, keeping highlight stable even when
+  // we're in the middle of a section's content.
+  intersectionObserver = new IntersectionObserver(
+    () => updateActiveHeading(),
+    {
+      root: previewContent.value,
+      rootMargin: '0px 0px -100% 0px',
+      threshold: [0, 1]
+    }
+  )
+
+  headings.forEach(h => intersectionObserver!.observe(h))
+
+  // Set initial active heading
+  updateActiveHeading()
+}
+
+// Auto-scroll the TOC sidebar to keep active item visible
+const scrollTocToActive = (anchor: string) => {
+  if (!tocSidebar.value) return
+  const activeLink = tocSidebar.value.querySelector(`a[data-anchor="${anchor}"]`) as HTMLElement
+  if (!activeLink) return
+  const sidebarRect = tocSidebar.value.getBoundingClientRect()
+  const linkRect = activeLink.getBoundingClientRect()
+  // Only scroll if the active link is outside the visible area
+  if (linkRect.top < sidebarRect.top || linkRect.bottom > sidebarRect.bottom) {
+    activeLink.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
   }
 }
 
@@ -133,8 +217,8 @@ watch(() => props.content, () => { renderContent() }, { immediate: true })
 
 watch([mermaidZoom, mermaidPan], () => { updateSvgViewBox() })
 
-onMounted(() => {
-  renderContent()
+onMounted(async () => {
+  await renderContent()
   if (props.syncScroll && previewContainer.value && previewContent.value) {
     setTimeout(() => {
       const editorEl = document.querySelector('.editor-core .cm-scroller') as HTMLElement
@@ -143,6 +227,7 @@ onMounted(() => {
       }
     }, 100)
   }
+
   mermaidErrorCleanupTimer = window.setInterval(() => { removeMermaidErrorMessages() }, 1000)
   document.addEventListener('keydown', handleKeyDown)
 })
@@ -150,12 +235,14 @@ onMounted(() => {
 onUnmounted(() => {
   if (syncScroll) { syncScroll.destroy(); syncScroll = null }
   if (mermaidErrorCleanupTimer !== null) { clearInterval(mermaidErrorCleanupTimer); mermaidErrorCleanupTimer = null }
+  if (intersectionObserver) { intersectionObserver.disconnect(); intersectionObserver = null }
   document.removeEventListener('keydown', handleKeyDown)
 })
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.key === 'Escape' && showMermaidModal.value) { closeMermaidModal() }
 }
+
 
 const handleClick = (event: Event) => {
   const target = event.target as HTMLElement
@@ -237,6 +324,34 @@ const handleMermaidZoom = (event: WheelEvent) => { event.deltaY < 0 ? zoomIn() :
 const scrollToAnchor = (anchor: string) => { previewContent.value?.querySelector(`#${anchor}`)?.scrollIntoView({ behavior: 'smooth' }) }
 const getTocItemClass = (item: TOCItem) => `toc-item toc-level-${item.level}`
 
+// Collect all anchors that are directly rendered in the TOC (top-level items + their direct children)
+const visibleTocAnchors = computed(() => {
+  const anchors = new Set<string>()
+  for (const item of toc.value) {
+    anchors.add(item.anchor)
+    for (const child of item.children) {
+      anchors.add(child.anchor)
+    }
+  }
+  return anchors
+})
+
+// Check if a heading or any of its descendants is the active heading
+const isHeadingActive = (item: TOCItem): boolean => {
+  if (activeHeading.value === item.anchor) return true
+  // Only highlight parent if the active heading is NOT itself shown in the TOC
+  if (visibleTocAnchors.value.has(activeHeading.value)) return false
+  // Active heading is deeper than what TOC shows — check descendants
+  const checkChildren = (children: TOCItem[]): boolean => {
+    for (const child of children) {
+      if (activeHeading.value === child.anchor) return true
+      if (child.children.length > 0 && checkChildren(child.children)) return true
+    }
+    return false
+  }
+  return checkChildren(item.children)
+}
+
 const toggleFullscreen = () => {
   isFullscreen.value = !isFullscreen.value
   emit('fullscreen-change', isFullscreen.value)
@@ -310,8 +425,9 @@ defineExpose({ toggleFullscreen })
 .toc-title { font-weight: 600; margin-bottom: 16px; font-size: 14px; color: var(--text-primary, #24292e); }
 .toc-list { list-style: none; padding-left: 0; margin: 0; }
 .toc-item { margin: 6px 0; }
-.toc-item a { color: var(--accent-color, #0366d6); text-decoration: none; display: block; padding: 6px 10px; border-radius: 4px; transition: background-color 0.2s; line-height: 1.4; }
+.toc-item a { color: var(--accent-color, #0366d6); text-decoration: none; display: block; padding: 6px 10px; border-radius: 4px; transition: background-color 0.2s, color 0.2s, border-left-color 0.2s; line-height: 1.4; border-left: 3px solid transparent; }
 .toc-item a:hover { background-color: var(--bg-tertiary, #e1e4e8); }
+.toc-item a.active { background-color: var(--accent-color, #0366d6) !important; color: white !important; font-weight: 600 !important; border-left-color: var(--accent-color, #0366d6) !important; box-shadow: 0 2px 4px rgba(3,102,214,0.2) !important; }
 .toc-sublist { list-style: none; padding-left: 16px; margin: 6px 0; }
 .toc-level-1 { font-weight: 600; }
 .toc-level-2 { font-size: 0.95em; font-weight: 500; }

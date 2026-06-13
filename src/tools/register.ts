@@ -9,6 +9,6 @@ import { datetimeTool } from './timestamp/index'
 toolRegistry.register(aiChatTool)
 toolRegistry.register(markdownEditorTool)
 toolRegistry.register(jsonConverterTool)
+toolRegistry.register(datetimeTool)
 toolRegistry.register(regexTesterTool)
 toolRegistry.register(deduplicatorTool)
-toolRegistry.register(datetimeTool)

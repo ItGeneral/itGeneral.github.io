@@ -47,9 +47,6 @@
       <button class="toolbar-btn" @click="openHelp" :title="t('common.help')">
         <span class="btn-icon">📖</span>
       </button>
-      <button class="toolbar-btn" @click="toggleTheme" :title="`切换主题 (${theme === 'dark' ? '浅色' : '深色'})`">
-        <span class="btn-icon">{{ theme === 'dark' ? '☀️' : '🌙' }}</span>
-      </button>
       <button class="toolbar-btn" @click="togglePreviewFullscreen" title="预览全屏">
         <span class="btn-icon">⛶</span>
       </button>
@@ -58,7 +55,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { eventBus } from '../Common/EventBus'
 import { useI18n } from '../../../../i18n'
 
@@ -66,11 +62,8 @@ const { t } = useI18n()
 
 const emit = defineEmits<{
   'insert': [text: string]
-  'theme-change': [theme: 'light' | 'dark']
   'preview-fullscreen': []
 }>()
-
-const theme = ref<'light' | 'dark'>('light')
 
 const insertMarkdown = (before: string, after: string) => {
   emit('insert', before + 'selected text' + after)
@@ -98,11 +91,6 @@ const exportHTML = () => {
 
 const exportMarkdown = () => {
   eventBus.emit('export-requested', { format: 'markdown' })
-}
-
-const toggleTheme = () => {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-  emit('theme-change', theme.value)
 }
 
 const togglePreviewFullscreen = () => {

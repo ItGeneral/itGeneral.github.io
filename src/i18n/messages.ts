@@ -224,7 +224,7 @@ const zh: I18nMessages = {
   // AI Chat tool
   'tool.aichat.name': 'AI 助手',
   'tool.aichat.desc': '与 AI 助手对话',
-  'tool.datetime.name': '日期时间工具',
+  'tool.datetime.name': '时间戳转换工具',
   'tool.datetime.desc': 'Unix 时间戳与日期互转，实时时钟',
 
   // Datetime tool
@@ -510,7 +510,7 @@ const en: I18nMessages = {
   // AI Chat tool
   'tool.aichat.name': 'AI Assistant',
   'tool.aichat.desc': 'Chat with AI assistant',
-  'tool.datetime.name': 'Datetime Tool',
+  'tool.datetime.name': 'Timestamp Converter',
   'tool.datetime.desc': 'Unix timestamp converter with live clock',
 
   // Datetime tool

@@ -1,14 +1,13 @@
 <template>
-  <div class="markdown-editor-tool" :data-theme="currentTheme">
+  <div class="markdown-editor-tool">
     <Toolbar
       @insert="handleInsert"
-      @theme-change="handleThemeChange"
       @preview-fullscreen="handlePreviewFullscreen"
     />
 
     <div class="main-content">
       <div class="editor-wrapper" :style="{ width: editorWidth + '%' }">
-        <EditorCore ref="editorRef" v-model="content" :theme="currentTheme" />
+        <EditorCore ref="editorRef" v-model="content" />
       </div>
 
       <div class="resizer" @mousedown="startResize"></div>
@@ -44,7 +43,6 @@ const onHelpRequested = () => {
 }
 
 const content = ref(DEFAULT_DOC_CONTENT)
-const currentTheme = ref<'light' | 'dark'>('light')
 const editorWidth = ref(50)
 
 const editorRef = ref<InstanceType<typeof EditorCore>>()
@@ -84,7 +82,6 @@ watch(() => docStore.state.currentContent, (newContent) => {
 
 onMounted(async () => {
   const config = await configManager.loadConfig()
-  currentTheme.value = config.theme === 'auto' ? 'light' : config.theme
   editorWidth.value = config.editorWidth
 
   // 加载文档
@@ -111,11 +108,6 @@ onUnmounted(() => {
 
 const handleInsert = (text: string) => {
   editorRef.value?.insert(text)
-}
-
-const handleThemeChange = (theme: 'light' | 'dark') => {
-  currentTheme.value = theme
-  configManager.updateConfig({ theme })
 }
 
 const handlePreviewFullscreen = () => {
