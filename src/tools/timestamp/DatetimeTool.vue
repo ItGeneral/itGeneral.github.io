@@ -180,7 +180,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, onActivated } from 'vue'
 import { useI18n } from '../../i18n'
 
 const { t, locale } = useI18n()
@@ -193,11 +193,21 @@ const copiedIndex = ref<number | null>(null)
 const now = ref(Date.now())
 let timer: ReturnType<typeof setInterval>
 
-onMounted(() => {
-  timer = setInterval(() => { now.value = Date.now() }, 1000)
-  // 初始化时填充当前时间戳到时间戳输入框（毫秒级）
+const initInputs = () => {
   inputTimestamp.value = String(Date.now())
   convertTimestamp()
+  inputDate.value = formatDate(new Date())
+  convertDate()
+  setQuick('today')
+}
+
+onMounted(() => {
+  timer = setInterval(() => { now.value = Date.now() }, 1000)
+  initInputs()
+})
+
+onActivated(() => {
+  initInputs()
 })
 
 onUnmounted(() => {
